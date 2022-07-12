@@ -5,19 +5,10 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3306/trafficboss?characterEncoding=utf8
-    username: metaboss
+    username: root
     password: dudwnsl1993!
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  security:
-    user:
-      name: admin
-      password: dudwnsl1993!
-
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
+mybatis:
+  type-aliases-package: com.example.myproject.mapper
+  mapper-locations: mapper/**/*.xml

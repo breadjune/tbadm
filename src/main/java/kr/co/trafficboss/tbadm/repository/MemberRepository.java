@@ -1,10 +1,12 @@
 package kr.co.trafficboss.tbadm.repository;
 
-import kr.co.trafficboss.tbadm.entity.Member;
-import org.springframework.data.jpa.repository.JpaRepository;
+import kr.co.trafficboss.tbadm.dao.Member;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Integer> {
+@Mapper
+public interface MemberRepository {
     Member findByUserId(String userId);
+    int insertMember(Member member);
 }

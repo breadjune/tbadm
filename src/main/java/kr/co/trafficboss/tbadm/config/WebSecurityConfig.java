@@ -16,16 +16,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // 정적 자원에 대해서는 Security 설정을 적용하지 않음.
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-    @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 // /about 요청에 대해서는 로그인을 요구함
                 .antMatchers("/").authenticated()
@@ -38,14 +38,9 @@ public class WebSecurityConfig {
                 .formLogin()
                 // 로그인 페이지를 제공하는 URL을 설정함
                 .loginPage("/login")
-                // 로그인 성공 URL을 설정함
-                .successForwardUrl("/index")
-                // 로그인 실패 URL을 설정함
-                .failureForwardUrl("/error")
                 .permitAll()
                 .and()
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
     }
 
     @Bean
@@ -65,13 +60,5 @@ public class WebSecurityConfig {
     @Bean
     public CustomLoginSuccessHandler customLoginSuccessHandler() {
         return new CustomLoginSuccessHandler();
-    }
-
-    public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-            http.addFilter(new TokenAuthFilter(authenticationManager));
-        }
     }
 }
