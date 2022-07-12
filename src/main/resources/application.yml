@@ -5,7 +5,7 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3306/trafficboss?characterEncoding=utf8
-    username: root
+    username: metaboss
     password: dudwnsl1993!
     driver-class-name: com.mysql.cj.jdbc.Driver
 

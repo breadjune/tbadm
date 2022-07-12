@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 public class MemberController {
 
@@ -18,7 +21,7 @@ public class MemberController {
     }
 
     @PostMapping("/login.do")
-    public String signUp(@RequestBody LoginDto loginDto) {
+    public String signUp(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("index get request");
         return "/login";
     }
