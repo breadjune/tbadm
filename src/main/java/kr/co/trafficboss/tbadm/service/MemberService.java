@@ -1,11 +1,12 @@
 package kr.co.trafficboss.tbadm.service;
 
-import kr.co.trafficboss.tbadm.dao.Member;
+import kr.co.trafficboss.tbadm.dto.Member;
 import kr.co.trafficboss.tbadm.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -24,6 +25,8 @@ public class MemberService implements UserDetailsService {
     }
 
     public int addMember(Member member) {
+        BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
+        member.setUserPw(bpe.encode(member.getUserPw()));
         return memberRepository.insertMember(member);
     }
 }

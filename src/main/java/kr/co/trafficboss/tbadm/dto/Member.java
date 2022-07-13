@@ -1,4 +1,4 @@
-package kr.co.trafficboss.tbadm.dao;
+package kr.co.trafficboss.tbadm.dto;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,6 +8,7 @@ import java.util.Collection;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @ToString
 public class Member implements UserDetails {
 

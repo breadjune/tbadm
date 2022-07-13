@@ -3,7 +3,7 @@
 
 <mapper namespace="kr.co.trafficboss.tbadm.repository.MemberRepository">
 
-    <select id="findByUserId" resultType="kr.co.trafficboss.tbadm.dao.Member">
+    <select id="findByUserId" resultType="kr.co.trafficboss.tbadm.dto.Member">
         SELECT
             no
         ,   user_id    AS userId
@@ -16,5 +16,25 @@
         FROM TB_USER
         WHERE user_id = #{userId}
     </select>
+
+    <insert id="insertMember" parameterType="kr.co.trafficboss.tbadm.dto.Member">
+        INSERT INTO TB_USER (
+            user_id
+        ,   user_pw
+        ,   user_name
+        ,   user_level
+        ,   user_ip
+        ,   reg_date
+        ,   mod_date
+        ) VALUES (
+            #{userId}
+        ,   #{userPw}
+        ,   #{userName}
+        ,   #{userLevel}
+        ,   #{userIp}
+        ,   NOW()
+        ,   NOW()
+        )
+    </insert>
 
 </mapper>

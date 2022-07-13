@@ -1,6 +1,6 @@
 package kr.co.trafficboss.tbadm.repository;
 
-import kr.co.trafficboss.tbadm.dao.Member;
+import kr.co.trafficboss.tbadm.dto.Member;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

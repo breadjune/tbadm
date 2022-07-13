@@ -3,15 +3,12 @@ package kr.co.trafficboss.tbadm.config;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -21,7 +18,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // 정적 자원에 대해서는 Security 설정을 적용하지 않음.
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        web.ignoring()
+                .antMatchers("/signup.do")
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     @Override
