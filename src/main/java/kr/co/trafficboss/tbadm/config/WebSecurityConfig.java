@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 // /about 요청에 대해서는 로그인을 요구함
-                .antMatchers("/").authenticated()
+                .antMatchers("/**").authenticated()
                 // /admin 요청에 대해서는 ROLE_ADMIN 역할을 가지고 있어야 함
                 .antMatchers("/admin").hasRole("ADMIN")
                 // 나머지 요청에 대해서는 로그인을 요구하지 않음

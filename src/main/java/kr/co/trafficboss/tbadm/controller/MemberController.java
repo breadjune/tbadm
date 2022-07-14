@@ -22,7 +22,7 @@ public class MemberController {
     @PostMapping("/login.do")
     public String signIn(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("index get request");
-        return "/login";
+        return "index";
     }
 
     @PostMapping("/signup.do")

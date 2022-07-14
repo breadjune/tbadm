@@ -15,7 +15,7 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                                         Authentication authentication) throws IOException {
         System.out.println("CustomLoginSuccessHandler invoked!");
         SecurityContextHolder.getContext().setAuthentication(authentication);
-//        request.getRequestDispatcher("/");
+        response.sendRedirect("/dashboard");
     }
 
 }

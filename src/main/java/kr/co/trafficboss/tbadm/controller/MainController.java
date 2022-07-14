@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class MainController {
 
-    @RequestMapping("/")
-    public String index(Model model) {
-        System.out.println("index get request");
-        return "index";
-    }
+    @RequestMapping("/dashboard")
+    public String index() { return "index"; }
+
+    @RequestMapping("/order")
+    public String order() { return "order"; }
+
+    @RequestMapping("/orderList")
+    public String orderList() { return "orderList"; }
 
     @RequestMapping("/charts")
     public String charts(Model model) {
