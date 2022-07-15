@@ -95,53 +95,52 @@
 					<h3 class="page-title">주문</h3>
 					<div class="row">
 						<div class="col-md-12">
-							<!-- TABLE STRIPED -->
 							<div class="panel">
 								<div class="panel-heading">
 									<h3 class="panel-title">단일 주문</h3>
 								</div>
 								<div class="panel-body">
 									<p>업체 선택</p>
-									<input type="text" class="form-control" placeholder="text field">
-									<br>
-									<p>상품 선택</p>
-									<input type="text" class="form-control" placeholder="text field">
-									<br>
-									<p>요청 개수</p>
-									<input type="password" class="form-control" value="asecret">
-									<br>
-									<textarea class="form-control" placeholder="textarea" rows="4"></textarea>
-									<br>
 									<select class="form-control">
-										<option value="cheese">Cheese</option>
-										<option value="tomatoes">Tomatoes</option>
-										<option value="mozarella">Mozzarella</option>
-										<option value="mushrooms">Mushrooms</option>
-										<option value="pepperoni">Pepperoni</option>
-										<option value="onions">Onions</option>
+										<option value="jap">JAP</option>
 									</select>
 									<br>
+									<p>상품 선택</p>
+									<select class="form-control">
+										<option value="traffic">[korea]트래픽</option>
+									</select>
+									<br>
+									<p>백링크</p>
+									<select class="form-control">
+										<option value="1435">[1435] 구글</option>
+										<option value="1436">[1436] 네이버</option>
+										<option value="1437">[1437] 네이버 블로그</option>
+										<option value="1438">[1438] 다음</option>
+										<option value="1440">[1440] 페이스북</option>
+										<option value="1441">[1441] 유튜브</option>
+										<option value="1442">[1442] 인스타그램</option>
+										<option value="2299">[2299][키워드] 구글</option>
+										<option value="2300">[2300][키워드] 네이버</option>
+										<option value="2301">[2301][키워드] 다음</option>
+									</select>
+									<br>
+									<div class="well">
+										<p><code>최대개수</code> : </p>
+										<p><code>시작 시간</code> : </p>
+										<p><code>평균 시간</code> : </p>
+									</div>
+									<br>
+									<p>요청 개수</p>
+									<input type="number" class="form-control">
+									<br>
 									<label class="fancy-checkbox">
-										<input type="checkbox">
-										<span>Fancy Checkbox 1</span>
-									</label>
-									<label class="fancy-checkbox">
-										<input type="checkbox">
-										<span>Fancy Checkbox 2</span>
-									</label>
-									<label class="fancy-checkbox">
-										<input type="checkbox">
-										<span>Fancy Checkbox 3</span>
+										<input name="dripFeed" type="checkbox" onclick="dripFeedCheck(this)">
+										<span><i></i>예약</span>
 									</label>
 									<br>
-									<label class="fancy-radio">
-										<input name="gender" value="male" type="radio">
-										<span><i></i>Male</span>
-									</label>
-									<label class="fancy-radio">
-										<input name="gender" value="female" type="radio">
-										<span><i></i>Female</span>
-									</label>
+									<p id="pay_text">요금</p>
+									<input type="number" class="form-control" readonly>
+									<br>
 								</div>
 							</div>
 							<!-- END TABLE STRIPED -->
@@ -150,6 +149,20 @@
 				</div>
 			</div>
 			<!-- END MAIN CONTENT -->
+		</div>
+		<div id="drip_feed_form" style="display: none">
+			<p>횟수</p>
+			<input type="number" class="form-control">
+			<br>
+			<p>간격(분)</p>
+			<input type="number" class="form-control">
+			<br>
+			<p>총량</p>
+			<input type="number" class="form-control">
+			<br>
+			<p>총 개수</p>
+			<input type="number" class="form-control" readonly>
+			<br>
 		</div>
 		<!-- END MAIN -->
 		<div class="clearfix"></div>
@@ -166,6 +179,21 @@
 	<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 	<script src="/scripts/klorofil-common.js"></script>
+
+	<script>
+		function dripFeedCheck(el) {
+			const drip_feed_form = document.getElementById("drip_feed_form");
+			const pay_text = document.getElementById("pay_text");
+			if(el.checked) {
+				const clone_drip_feed_form = drip_feed_form.cloneNode(true);
+				clone_drip_feed_form.id = "clone_drip_feed_form";
+				clone_drip_feed_form.style.display = "block";
+				pay_text.before(clone_drip_feed_form);
+			} else {
+				document.getElementById("clone_drip_feed_form").remove();
+			}
+		}
+	</script>
 </body>
 
 </html>
