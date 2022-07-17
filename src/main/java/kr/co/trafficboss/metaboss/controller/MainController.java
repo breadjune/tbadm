@@ -1,4 +1,4 @@
-package kr.co.trafficboss.tbadm.controller;
+package kr.co.trafficboss.metaboss.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,14 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class MainController {
 
+
     @RequestMapping("/dashboard")
     public String index() { return "index"; }
-
-    @RequestMapping("/order")
-    public String order() { return "order"; }
-
-    @RequestMapping("/orderList")
-    public String orderList() { return "orderList"; }
 
     @RequestMapping("/charts")
     public String charts(Model model) {

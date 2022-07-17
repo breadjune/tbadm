@@ -1,7 +1,7 @@
-package kr.co.trafficboss.tbadm.service;
+package kr.co.trafficboss.metaboss.service;
 
-import kr.co.trafficboss.tbadm.dto.Member;
-import kr.co.trafficboss.tbadm.repository.MemberRepository;
+import kr.co.trafficboss.metaboss.dto.Member;
+import kr.co.trafficboss.metaboss.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,4 +1,4 @@
-package kr.co.trafficboss.tbadm.dto;
+package kr.co.trafficboss.metaboss.dto;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

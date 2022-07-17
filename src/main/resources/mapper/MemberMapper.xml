@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.co.trafficboss.tbadm.repository.MemberRepository">
+<mapper namespace="kr.co.trafficboss.metaboss.repository.MemberRepository">
 
-    <select id="findByUserId" resultType="kr.co.trafficboss.tbadm.dto.Member">
+    <select id="findByUserId" resultType="kr.co.trafficboss.metaboss.dto.Member">
         SELECT
             no
         ,   user_id    AS userId
@@ -17,7 +17,7 @@
         WHERE user_id = #{userId}
     </select>
 
-    <insert id="insertMember" parameterType="kr.co.trafficboss.tbadm.dto.Member">
+    <insert id="insertMember" parameterType="kr.co.trafficboss.metaboss.dto.Member">
         INSERT INTO TB_USER (
             user_id
         ,   user_pw

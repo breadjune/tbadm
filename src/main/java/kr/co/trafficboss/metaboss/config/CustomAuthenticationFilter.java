@@ -1,4 +1,4 @@
-package kr.co.trafficboss.tbadm.config;
+package kr.co.trafficboss.metaboss.config;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;

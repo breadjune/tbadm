@@ -1,11 +1,9 @@
-package kr.co.trafficboss.tbadm.controller;
+package kr.co.trafficboss.metaboss.controller;
 
-import kr.co.trafficboss.tbadm.dto.Member;
-import kr.co.trafficboss.tbadm.service.MemberService;
+import kr.co.trafficboss.metaboss.dto.Member;
+import kr.co.trafficboss.metaboss.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;

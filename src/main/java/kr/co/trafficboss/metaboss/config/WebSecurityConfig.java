@@ -1,4 +1,4 @@
-package kr.co.trafficboss.tbadm.config;
+package kr.co.trafficboss.metaboss.config;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers("/signup.do")
+                .antMatchers("/img/**")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 

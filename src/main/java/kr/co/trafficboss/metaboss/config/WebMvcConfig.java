@@ -1,4 +1,4 @@
-package kr.co.trafficboss.tbadm.config;
+package kr.co.trafficboss.metaboss.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
