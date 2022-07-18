@@ -45,15 +45,22 @@ $(document).ready(function() {
 		}
 	});
 
-
 	/*-----------------------------------/
 	/*	SIDEBAR NAVIGATION
 	/*----------------------------------*/
+	$('.sidebar a').on('click', function() {
+		const _name = this.name;
+		localStorage.setItem("currentActive", _name);
+	});
 
 	$('.sidebar a[data-toggle="collapse"]').on('click', function() {
+		const _name = this.name;
 		if($(this).hasClass('collapsed')) {
+			localStorage.setItem("currentPage", _name);
+			console.log("currentPage : " + _name);
 			$(this).addClass('active');
 		} else {
+			localStorage.setItem("currentPage", "");
 			$(this).removeClass('active');
 		}
 	});
@@ -203,6 +210,35 @@ $(document).ready(function() {
 			toastr['info']($message);
 		});
 	}
+
+	const _links = document.querySelectorAll('.sidebar a');
+	let currentActive = localStorage.getItem("currentActive");
+	let currentPage = localStorage.getItem("currentPage");
+	_links.forEach(_link => {
+		const _name = _link.name
+		console.log('_name : ' + _name);
+		if(_link.name === currentActive){
+			$('.sidebar a[name="'+currentActive+'"]').addClass('active');
+		} else if (_link.name === currentPage) {
+			$('.sidebar a[name="'+currentPage+'"]').addClass('active');
+			$('.sidebar a[name="'+currentPage+'"]').click();
+		} else {
+			_link.className = "";
+		}
+	})
+
+	// if (localStorage.getItem("currentActive") !== null) {
+	// 	const currentActive = localStorage.getItem("currentActive");
+	// 	console.log('currentActive : ' + currentActive);
+	// 	$('.sidebar a[name="'+currentActive+'"]').addClass('active');
+	// }
+	//
+	// if (localStorage.getItem("currentPage") !== "" && localStorage.getItem("currentPage") !== null) {
+	// 	const currentPage = localStorage.getItem("currentPage");
+	// 	console.log('currentPage : ' + currentPage);
+	// 	$('.sidebar a[name="'+currentPage+'"]').addClass('active');
+	// 	$('.sidebar a[name="'+currentPage+'"]').click();
+	// }
 });
 
 // toggle function
