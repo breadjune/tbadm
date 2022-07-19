@@ -216,29 +216,17 @@ $(document).ready(function() {
 	let currentPage = localStorage.getItem("currentPage");
 	_links.forEach(_link => {
 		const _name = _link.name
-		console.log('_name : ' + _name);
-		if(_link.name === currentActive){
-			$('.sidebar a[name="'+currentActive+'"]').addClass('active');
-		} else if (_link.name === currentPage) {
-			$('.sidebar a[name="'+currentPage+'"]').addClass('active');
-			$('.sidebar a[name="'+currentPage+'"]').click();
-		} else {
-			_link.className = "";
+		if(_name === currentActive){
+			const activeMenu = $('.sidebar a[name="'+currentActive+'"]');
+			activeMenu.addClass('active');
+			console.log(activeMenu.attr("href"));
+			if (currentPage !== "" && currentPage !== null && activeMenu.attr("href").includes(currentPage)) {
+				console.log("currentPage : " + currentPage);
+				$('.sidebar a[name="'+currentPage+'"]').addClass('active');
+				$('.sidebar a[name="'+currentPage+'"]').click();
+			}
 		}
 	})
-
-	// if (localStorage.getItem("currentActive") !== null) {
-	// 	const currentActive = localStorage.getItem("currentActive");
-	// 	console.log('currentActive : ' + currentActive);
-	// 	$('.sidebar a[name="'+currentActive+'"]').addClass('active');
-	// }
-	//
-	// if (localStorage.getItem("currentPage") !== "" && localStorage.getItem("currentPage") !== null) {
-	// 	const currentPage = localStorage.getItem("currentPage");
-	// 	console.log('currentPage : ' + currentPage);
-	// 	$('.sidebar a[name="'+currentPage+'"]').addClass('active');
-	// 	$('.sidebar a[name="'+currentPage+'"]').click();
-	// }
 });
 
 // toggle function

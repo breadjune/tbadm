@@ -16,7 +16,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public List<ProductVO> getProductByVendor(String vendor) {
-        return productRepository.getProductByVendor(vendor);
+        return  productRepository.getProductByVendor(vendor);
     }
 
 }

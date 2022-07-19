@@ -6,7 +6,9 @@ import kr.co.metaboss.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -18,7 +20,14 @@ public class trafficController {
     private final VendorService vendorService;
 
     @GetMapping("/products")
-    public String product() { return "products"; }
+    public ModelAndView product(HttpServletRequest req) {
+        String vendor = req.getParameter("vendor") != null ? req.getParameter("vendor") : "JAP";
+        ModelAndView mav = new ModelAndView("products");
+        List<ProductVO> list = productService.getProductByVendor(vendor);
+        System.out.println("list : " + list.toString());
+        mav.addObject(list);
+        return mav;
+    }
 
     @GetMapping("/order")
     public String order() { return "order"; }
@@ -37,4 +46,5 @@ public class trafficController {
     public void updateProduct(String vendor) {
         vendorService.updateProduct(vendor);
     }
+
 }
