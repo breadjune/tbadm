@@ -7,6 +7,7 @@
         SELECT *
         FROM TB_PRODUCT
         WHERE vendor = #{vendor}
+        LIMIT 0, 10
     </select>
 
     <select id="getProductServices" parameterType="String" resultType="java.util.List">

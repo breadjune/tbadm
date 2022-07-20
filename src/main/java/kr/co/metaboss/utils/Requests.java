@@ -1,4 +1,4 @@
-package kr.co.metaboss;
+package kr.co.metaboss.utils;
 
 import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
@@ -19,9 +19,17 @@ public class Requests {
         this.data = data;
     }
 
-    public JSONArray post() {
-        JSONArray result = null;
-        HttpURLConnection conn = null;
+    public JSONArray postAndArrayResponse() {
+        return new JSONArray(this.post());
+    }
+
+    public JSONObject postAndObjectResponse() {
+        return new JSONObject(this.post());
+    }
+
+    private String post() {
+        HttpURLConnection conn;
+        String result = "";
         try {
             URL url = new URL(requestUrl);
             conn = (HttpURLConnection) url.openConnection();
@@ -45,11 +53,10 @@ public class Requests {
                 response.append(line);
             }
             reader.close();
-            result = new JSONArray(response.toString());
+            result = response.toString();
         } catch (IOException e) {
             log.error(e.getStackTrace());
         }
         return result;
     }
-
 }

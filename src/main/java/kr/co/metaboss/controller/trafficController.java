@@ -44,7 +44,7 @@ public class trafficController {
     @PostMapping("/updateProduct")
     @ResponseBody
     public void updateProduct(String vendor) {
-        vendorService.updateProduct(vendor);
+        productService.updateProduct(vendor);
     }
 
 }
