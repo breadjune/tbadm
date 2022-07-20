@@ -23,9 +23,9 @@ public class trafficController {
     public ModelAndView product(HttpServletRequest req) {
         String vendor = req.getParameter("vendor") != null ? req.getParameter("vendor") : "JAP";
         ModelAndView mav = new ModelAndView("products");
-        List<ProductVO> list = productService.getProductByVendor(vendor);
-        System.out.println("list : " + list.toString());
-        mav.addObject(list);
+        List<ProductVO> productList = productService.getProductByVendor(vendor);
+//        System.out.println("list : " + list.toString());
+        mav.addObject("productList",productList);
         return mav;
     }
 
