@@ -3,7 +3,7 @@
 
 <mapper namespace="kr.co.metaboss.repository.VendorRepository">
 
-    <select id="getVendorList" parameterType="String" resultType="kr.co.metaboss.vo.VendorVO">
+    <select id="getVendorList" resultType="kr.co.metaboss.vo.VendorVO">
         SELECT *
         FROM TB_VENDOR
     </select>
@@ -11,7 +11,7 @@
     <select id="getVendor" parameterType="String" resultType="kr.co.metaboss.vo.VendorVO">
         SELECT *
         FROM TB_VENDOR
-        WHERE vendorName = #{vendorName}
+        WHERE vendorName = #{vendor}
     </select>
     
     <update id="updateProduct" parameterType="java.util.HashMap">

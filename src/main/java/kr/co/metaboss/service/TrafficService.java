@@ -16,9 +16,9 @@ public class TrafficService {
 
     private final VendorRepository vendorRepository;
 
-    public int addOrder(Order order) {
-        VendorVO vendorVO = vendorRepository.getVendor(order.getVendor());
+//    public int addOrder(Order order) {
+//        VendorVO vendorVO = vendorRepository.getVendor(order.getVendor());
 //        JSONObject result = new Requests()
-    }
+//    }
 
 }

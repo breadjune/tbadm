@@ -23,11 +23,20 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
 
-    public List<ProductVO> getProductByVendor(String vendor) {
-        return  productRepository.getProductByVendor(vendor);
+    public List<ProductVO> getProductByVendor(String vendor, String index) {
+        return productRepository.getProductByVendor(vendor, index);
+    }
+
+    public int getTotalCountByVendor(String vendor) {
+        int totalCount = productRepository.getTotalCountByVendor(vendor);
+        log.info("totalCount :" + totalCount);
+        int pageCount = (int) Math.floor(totalCount/20);
+        log.info("pageCount :" + pageCount);
+        return pageCount;
     }
 
     public void updateProduct(String vendor) {
+        log.info("vendor : " + vendor);
         VendorVO vendorVO = vendorRepository.getVendor(vendor);
         List<String> productServiceList = productRepository.getProductServices(vendor);
         JSONObject data = new JSONObject();
@@ -36,6 +45,7 @@ public class ProductService {
         JSONArray response = new Requests(vendorVO.getUrl(), data).postAndArrayResponse();
         List<Map<String, Object>> responseArray = JSONUtils.getListMapFromJsonArray(response);
         for (Map<String, Object> stringObjectMap : responseArray) {
+            stringObjectMap.put("vendor", vendor);
             if (productServiceList.contains(String.valueOf(stringObjectMap.get("service")))) productRepository.updateProduct(stringObjectMap);
             else productRepository.insertProduct(stringObjectMap);
         }

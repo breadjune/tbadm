@@ -7,7 +7,15 @@
         SELECT *
         FROM TB_PRODUCT
         WHERE vendor = #{vendor}
-        LIMIT 0, 10
+        AND category LIKE 'Website%'
+        LIMIT ${index}, 20
+    </select>
+
+    <select id="getTotalCountByVendor" parameterType="String" resultType="int">
+        SELECT count(*)
+        FROM TB_PRODUCT
+        WHERE vendor = #{vendor}
+        AND category LIKE 'Website%'
     </select>
 
     <select id="getProductServices" parameterType="String" resultType="java.util.List">

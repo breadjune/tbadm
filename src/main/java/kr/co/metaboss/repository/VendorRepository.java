@@ -10,5 +10,5 @@ import java.util.List;
 @Mapper
 public interface VendorRepository {
     List<VendorVO> getVendorList();
-    VendorVO getVendor(String vendorName);
+    VendorVO getVendor(String vendor);
 }

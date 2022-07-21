@@ -11,7 +11,8 @@ import java.util.Map;
 @Mapper
 public interface ProductRepository {
     List<ProductVO> getProduct();
-    List<ProductVO> getProductByVendor(String vendor);
+    List<ProductVO> getProductByVendor(String vendor, String index);
+    int getTotalCountByVendor(String vendor);
     List<String> getProductServices(String vendor);
     int insertProduct(Map<String, Object> map);
     int updateProduct(Map<String, Object> map);
