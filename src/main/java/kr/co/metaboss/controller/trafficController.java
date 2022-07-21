@@ -21,11 +21,11 @@ public class trafficController {
     private final ProductService productService;
     private final VendorService vendorService;
 
-    @RequestMapping("/products")
-    public ModelAndView getProducts(@RequestParam(defaultValue = "JAP") String vendor,
+    @GetMapping("/products")
+    public ModelAndView getProducts(@RequestParam(defaultValue = "KINGS") String vendor,
                                     @RequestParam(defaultValue = "0") String index) {
         ModelAndView mav = new ModelAndView("products");
-        mav.addObject("list", productService.getProductByVendor(vendor, index));
+        mav.addObject("list", productService.getProductByVendor(vendor));
         mav.addObject("count", productService.getTotalCountByVendor(vendor));
         return mav;
     }
@@ -34,15 +34,19 @@ public class trafficController {
     @ResponseBody
     public ModelAndView postProducts(@RequestParam String vendor,
                                      @RequestParam String index) {
-        List<ProductVO> productList = productService.getProductByVendor(vendor, index);
-        log.info("");
+        List<ProductVO> list = productService.getProductByVendor(vendor);
         ModelAndView mav = new ModelAndView("products :: #tables");
-        mav.addObject("list", productList);
+        mav.addObject("list", list);
         return mav;
     }
 
     @GetMapping("/order")
-    public String order() { return "order"; }
+    public ModelAndView order(@RequestParam(defaultValue = "KINGS") String vendor) {
+        ModelAndView mav = new ModelAndView("order");
+        mav.addObject("vendors", vendorService.getVendorByName());
+        mav.addObject("products", productService.getProductByVendor(vendor));
+        return mav;
+    }
 
     @GetMapping("/orderList")
     public String orderList() { return "orderList"; }
@@ -51,7 +55,7 @@ public class trafficController {
     @ResponseBody
     public List<ProductVO> getProduct(@RequestParam String vendor,
                                       @RequestParam(defaultValue = "0") String index) {
-        return productService.getProductByVendor(vendor, index);
+        return productService.getProductByVendor(vendor);
     }
 
     @GetMapping("/updateProduct")

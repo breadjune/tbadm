@@ -11,6 +11,6 @@ public class Order {
     String service;
     String link;
     String quantity;
-    String run;
+    String runs;
     String interval;
 }

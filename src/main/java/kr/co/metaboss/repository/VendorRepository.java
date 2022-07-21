@@ -11,4 +11,5 @@ import java.util.List;
 public interface VendorRepository {
     List<VendorVO> getVendorList();
     VendorVO getVendor(String vendor);
+    List<String> getVendorByName();
 }

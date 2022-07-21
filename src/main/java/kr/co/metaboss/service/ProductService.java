@@ -23,8 +23,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
 
-    public List<ProductVO> getProductByVendor(String vendor, String index) {
-        return productRepository.getProductByVendor(vendor, index);
+    public List<ProductVO> getProductByVendor(String vendor) {
+        return productRepository.getProductByVendor(vendor);
     }
 
     public int getTotalCountByVendor(String vendor) {

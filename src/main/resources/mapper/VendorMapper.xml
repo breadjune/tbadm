@@ -13,7 +13,12 @@
         FROM TB_VENDOR
         WHERE vendorName = #{vendor}
     </select>
-    
+
+    <select id="getVendorByName" resultType="java.util.List">
+        SELECT vendorName
+        FROM TB_VENDOR
+    </select>
+
     <update id="updateProduct" parameterType="java.util.HashMap">
         UPDATE TB_PRODUCT
         SET  productName = #{name}
