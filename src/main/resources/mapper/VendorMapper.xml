@@ -14,7 +14,7 @@
         WHERE vendorName = #{vendor}
     </select>
 
-    <select id="getVendorByName" resultType="java.util.List">
+    <select id="getVendorByName" resultType="String">
         SELECT vendorName
         FROM TB_VENDOR
     </select>

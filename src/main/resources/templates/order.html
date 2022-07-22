@@ -109,24 +109,19 @@
 									<p>상품 선택</p>
 									<input type="String" class="form-control" value="트래픽" disabled>
 									<br>
-									<p>리퍼러</p>
-									<select class="form-control">
-										<option value="1435">[1435] 구글</option>
-										<option value="1436">[1436] 네이버</option>
-										<option value="1437">[1437] 네이버 블로그</option>
-										<option value="1438">[1438] 다음</option>
-										<option value="1440">[1440] 페이스북</option>
-										<option value="1441">[1441] 유튜브</option>
-										<option value="1442">[1442] 인스타그램</option>
-										<option value="2299">[2299][키워드] 구글</option>
-										<option value="2300">[2300][키워드] 네이버</option>
-										<option value="2301">[2301][키워드] 다음</option>
+									<p>서비스</p>
+									<select id="service" class="form-control">
+										<th:block th:each="product : ${products}">
+											<option th:text="${product.productName}" th:value="${product.service}"></option>
+										</th:block>
 									</select>
 									<br>
 									<div class="well">
-										<p><code>최대개수</code> : </p>
-										<p><code>시작 시간</code> : </p>
-										<p><code>평균 시간</code> : </p>
+										<p><code>가격(1000개당)</code> : <span id="charge" th:text="${products[0].rate}+'$'"></span></p>
+										<p><code>최소 주문 개수</code> : <span th:text="${products[0].minOrder}"></span></p>
+										<p><code>최대 주문 개수</code> : <span th:text="${products[0].maxOrder}"></span></p>
+										<p><code>리필 가능 여부</code> : <span th:text="${products[0].refill}"></span></p>
+										<p><code>취소 가능 여부</code> : <span th:text="${products[0].cancel}"></span></p>
 									</div>
 									<br>
 									<p>요청 개수</p>
@@ -180,7 +175,31 @@
 	<script src="/scripts/klorofil-common.js"></script>
 	<script src="/scripts/custom.js"></script>
 
-	<script>
+	<script th:inline="javascript">
+		const products = [[${products}]];
+		const serviceMap = new Object();
+		for (let i=0, pl=products.length; i<pl; i++) {
+			serviceMap[products[i].service] = products[i];
+		}
+		console.log(serviceMap);
+		$( document ).ready(function() {
+			$('#service').change(function () {
+				let service = this.value;
+				$.ajax({
+					type: "GET",
+					url: "http://spartacodingclub.shop/sparta_api/rate",
+					data: {},
+					success: function (response) {
+						const nowRate = response['rate'];
+						const srvRate = serviceMap[service].rate;
+						const exchange = Number(srvRate)*Number(nowRate);
+						console.log("nowRate["+nowRate+"]/srvRate["+srvRate+"]/exchange["+exchange+"]");
+						$('#charge').text(srvRate+"($) / " + Math.ceil(exchange)+"(원)");
+					}
+				})
+			});
+		});
+
 		function dripFeedCheck(el) {
 			const drip_feed_form = document.getElementById("drip_feed_form");
 			const pay_text = document.getElementById("pay_text");

@@ -22,8 +22,7 @@ public class trafficController {
     private final VendorService vendorService;
 
     @GetMapping("/products")
-    public ModelAndView getProducts(@RequestParam(defaultValue = "KINGS") String vendor,
-                                    @RequestParam(defaultValue = "0") String index) {
+    public ModelAndView getProducts(@RequestParam(defaultValue = "KINGS") String vendor) {
         ModelAndView mav = new ModelAndView("products");
         mav.addObject("list", productService.getProductByVendor(vendor));
         mav.addObject("count", productService.getTotalCountByVendor(vendor));
@@ -32,8 +31,7 @@ public class trafficController {
 
     @PostMapping("/products")
     @ResponseBody
-    public ModelAndView postProducts(@RequestParam String vendor,
-                                     @RequestParam String index) {
+    public ModelAndView postProducts(@RequestParam String vendor) {
         List<ProductVO> list = productService.getProductByVendor(vendor);
         ModelAndView mav = new ModelAndView("products :: #tables");
         mav.addObject("list", list);
