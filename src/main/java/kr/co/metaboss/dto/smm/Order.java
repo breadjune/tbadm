@@ -2,9 +2,11 @@ package kr.co.metaboss.dto.smm;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class Order {
     String vendor;
     String action;

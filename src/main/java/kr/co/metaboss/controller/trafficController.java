@@ -1,5 +1,6 @@
 package kr.co.metaboss.controller;
 
+import kr.co.metaboss.dto.smm.Order;
 import kr.co.metaboss.service.ProductService;
 import kr.co.metaboss.service.VendorService;
 import kr.co.metaboss.vo.ProductVO;
@@ -44,6 +45,11 @@ public class trafficController {
         mav.addObject("vendors", vendorService.getVendorByName());
         mav.addObject("products", productService.getProductByVendor(vendor));
         return mav;
+    }
+
+    @PostMapping("/order")
+    public void order(Order order) {
+        log.info("post order : " + order.toString());
     }
 
     @GetMapping("/orderList")

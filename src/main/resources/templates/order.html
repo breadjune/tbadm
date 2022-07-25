@@ -100,41 +100,70 @@
 									<h3 class="panel-title">단일 주문</h3>
 								</div>
 								<div class="panel-body">
-									<p>업체 선택</p>
-									<select class="form-control">
-										<option value="KINGS">KINGS</option>
-										<option value="JAP">JAP</option>
-									</select>
-									<br>
-									<p>상품 선택</p>
-									<input type="String" class="form-control" value="트래픽" disabled>
-									<br>
-									<p>서비스</p>
-									<select id="service" class="form-control">
-										<th:block th:each="product : ${products}">
-											<option th:text="${product.productName}" th:value="${product.service}"></option>
-										</th:block>
-									</select>
-									<br>
-									<div class="well">
-										<p><code>가격(1000개당)</code> : <span id="charge" th:text="${products[0].rate}+'$'"></span></p>
-										<p><code>최소 주문 개수</code> : <span th:text="${products[0].minOrder}"></span></p>
-										<p><code>최대 주문 개수</code> : <span th:text="${products[0].maxOrder}"></span></p>
-										<p><code>리필 가능 여부</code> : <span th:text="${products[0].refill}"></span></p>
-										<p><code>취소 가능 여부</code> : <span th:text="${products[0].cancel}"></span></p>
+									<form id="form" action="order" method="post">
+										<p>업체 선택</p>
+										<select name="vendor" class="form-control">
+											<option value="KINGS">KINGS</option>
+											<option value="JAP">JAP</option>
+										</select>
+										<br>
+										<p>상품 선택</p>
+										<input type="String" class="form-control" name="action" value="add" readonly>
+										<br>
+										<p>서비스</p>
+										<select id="service" name="service" class="form-control">
+											<th:block th:each="product : ${products}">
+												<option th:text="${product.productName}" th:value="${product.service}"></option>
+											</th:block>
+										</select>
+										<br>
+										<div class="well">
+											<p><code>가격(1000개당)</code> : <span id="charge" th:text="${products[0].rate}+'$'"></span></p>
+											<p><code>최소 주문 개수</code> : <span id="minOrder" th:text="${products[0].minOrder}"></span></p>
+											<p><code>최대 주문 개수</code> : <span id="maxOrder" th:text="${products[0].maxOrder}"></span></p>
+											<p><code>리필 가능 여부</code> :
+												<th:block th:switch="${products[0].refill}">
+													<span class="refill" th:case="0">없음</span>
+													<span class="refill" th:case="1">있음</span>
+												</th:block>
+											</p>
+											<p><code>취소 가능 여부</code> :
+												<th:block th:switch="${products[0].cancel}">
+													<span class="cancel" th:case="0">없음</span>
+													<span class="cancel" th:case="1">있음</span>
+												</th:block>
+											</p>
+										</div>
+										<br>
+										<p>URL</p>
+										<input type="String" class="form-control" name="link" value="">
+										<br>
+										<p>주문 개수</p>
+										<input id="order" name="quantity" class="form-control" type="number" value="0" onwheel="return false;">
+										<br>
+										<label class="fancy-checkbox">
+											<input id="dripFeed" name="dripFeed" type="checkbox" onclick="dripFeedCheck(this)">
+											<span><i></i>예약</span>
+										</label>
+										<br>
+										<div id="dripFeedDiv" style="display: none">
+											<p>횟수</p>
+											<input id="run" name="runs" class="form-control" type="number" value="0" onwheel="return false;" disabled>
+											<br>
+											<p>간격(분)</p>
+											<input id="term" name="interval" class="form-control" type="number" value="0" onwheel="return false;" disabled>
+											<br>
+											<p>총 개수</p>
+											<input id="totalOrder" name="totalQuantity" type="number" class="form-control" value="0" readonly disabled>
+											<br>
+										</div>
+										<p id="pay_text">요금</p>
+										<input id="amount" name="amount" type="number" class="form-control" readonly>
+										<br>
+									</form>
+									<div class="text-center">
+										<button type="button" class="btn btn-primary" onclick="submit();">전송</button>
 									</div>
-									<br>
-									<p>요청 개수</p>
-									<input type="number" class="form-control">
-									<br>
-									<label class="fancy-checkbox">
-										<input name="dripFeed" type="checkbox" onclick="dripFeedCheck(this)">
-										<span><i></i>예약</span>
-									</label>
-									<br>
-									<p id="pay_text">요금</p>
-									<input type="number" class="form-control" readonly>
-									<br>
 								</div>
 							</div>
 							<!-- END TABLE STRIPED -->
@@ -143,20 +172,6 @@
 				</div>
 			</div>
 			<!-- END MAIN CONTENT -->
-		</div>
-		<div id="drip_feed_form" style="display: none">
-			<p>횟수</p>
-			<input type="number" class="form-control">
-			<br>
-			<p>간격(분)</p>
-			<input type="number" class="form-control">
-			<br>
-			<p>총량</p>
-			<input type="number" class="form-control">
-			<br>
-			<p>총 개수</p>
-			<input type="number" class="form-control" readonly>
-			<br>
 		</div>
 		<!-- END MAIN -->
 		<div class="clearfix"></div>
@@ -176,42 +191,126 @@
 	<script src="/scripts/custom.js"></script>
 
 	<script th:inline="javascript">
-		const products = [[${products}]];
-		const serviceMap = new Object();
-		for (let i=0, pl=products.length; i<pl; i++) {
-			serviceMap[products[i].service] = products[i];
+		const PRODUCTS = [[${products}]];
+		let EXCHANGE = "";
+		const SERVICE_MAP = new Object();
+		for (let i=0, pl=PRODUCTS.length; i<pl; i++) {
+			SERVICE_MAP[PRODUCTS[i]['service']] = PRODUCTS[i];
 		}
-		console.log(serviceMap);
+		exchange();
+
 		$( document ).ready(function() {
+
 			$('#service').change(function () {
-				let service = this.value;
-				$.ajax({
-					type: "GET",
-					url: "http://spartacodingclub.shop/sparta_api/rate",
-					data: {},
-					success: function (response) {
-						const nowRate = response['rate'];
-						const srvRate = serviceMap[service].rate;
-						const exchange = Number(srvRate)*Number(nowRate);
-						console.log("nowRate["+nowRate+"]/srvRate["+srvRate+"]/exchange["+exchange+"]");
-						$('#charge').text(srvRate+"($) / " + Math.ceil(exchange)+"(원)");
-					}
-				})
+				getExchange(this);
+			});
+
+			$('#order').keyup(function () {
+				this.value = this.value.replace(/(^0+)/,'');
+				if($('#dripFeed').is(':checked')) totalAmount(true);
+				else totalAmount(false);
+			});
+
+			$('#order').blur(function () {
+				let order = Number(this.value);
+				const service = $('#service').val();
+				const minOrder = Number(SERVICE_MAP[service]['minOrder']);
+				const maxOrder = Number(SERVICE_MAP[service]['maxOrder']);
+				const rate = Number(SERVICE_MAP[service]['rate'])/1000;
+
+				if (order < minOrder) {
+					this.value = minOrder;
+					$('#amount').val(parseFloat((rate*minOrder).toFixed(7)));
+				} else if (order > maxOrder) {
+					this.value = maxOrder;
+					$('#amount').val(parseFloat((rate*maxOrder).toFixed(7)));
+				}
+			});
+
+			$('#run').keyup(function () {
+				this.value = this.value.replace(/(^0+)/,'');
+				totalAmount(true);
+			});
+
+			$('#run').blur(function () {
+				const order = Number($('#order').val());
+				const service = $('#service').val();
+				const maxOrder = Number(SERVICE_MAP[service]['maxOrder']);
+				let run = Number(this.value);
+				if (order*run > maxOrder) this.value = Math.floor(maxOrder/order);
+				totalAmount(true);
+			});
+
+			$('#term').keyup(function () {
+				this.value = this.value.replace(/(^0+)/,'');
 			});
 		});
 
+		function totalAmount(dripFeed) {
+			const order = Number($('#order').val());
+			const run = Number($('#run').val());
+			const service = $('#service').val();
+			const amount = $('#amount');
+			const totalOrder = $('#totalOrder');
+			const rate = Number(SERVICE_MAP[service]['rate'])/1000;
+			totalOrder.val(order*run);
+			if(dripFeed) amount.val(parseFloat(((rate*order)*run).toFixed(7)));
+			else amount.val(parseFloat((rate*order).toFixed(7)));
+		}
+
 		function dripFeedCheck(el) {
-			const drip_feed_form = document.getElementById("drip_feed_form");
-			const pay_text = document.getElementById("pay_text");
+			const dripFeedDiv = document.getElementById('dripFeedDiv');
+			const inputs = dripFeedDiv.querySelectorAll('input');
 			if(el.checked) {
-				const clone_drip_feed_form = drip_feed_form.cloneNode(true);
-				clone_drip_feed_form.id = "clone_drip_feed_form";
-				clone_drip_feed_form.style.display = "block";
-				pay_text.before(clone_drip_feed_form);
+				dripFeedDiv.style.display = 'block';
+				inputs.forEach(input => {
+					input.disabled = false;
+				});
+				totalAmount(true);
 			} else {
-				document.getElementById("clone_drip_feed_form").remove();
+				dripFeedDiv.style.display = 'none';
+				inputs.forEach(input => {
+					input.disabled = true;
+				});
+				totalAmount(false);
 			}
 		}
+
+		function exchange() {
+			$.ajax({
+				type: "GET",
+				url: "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD",
+				success: function (response) {
+					EXCHANGE = response[0]['basePrice'];
+					let service = document.getElementById('service').value;
+					const exchange = Number(SERVICE_MAP[service].rate)*Number(EXCHANGE);
+					$('#charge').text(SERVICE_MAP[service].rate+"($) | " + Math.ceil(exchange)+"(원)");
+				}
+			})
+		}
+
+		function getExchange(element) {
+			let service = element.value;
+			const exchange = Number(SERVICE_MAP[service].rate)*Number(EXCHANGE);
+			const minOrder = Number(SERVICE_MAP[service]['minOrder']);
+			const maxOrder = Number(SERVICE_MAP[service]['maxOrder']);
+			const refill = Number(SERVICE_MAP[service]['refill']);
+			const cancel = Number(SERVICE_MAP[service]['cancel']);
+			$('#charge').text(SERVICE_MAP[service].rate+"($) | " + Math.ceil(exchange)+"(원)");
+			$('#minOrder').text(minOrder);
+			$('#maxOrder').text(maxOrder);
+			if (refill === 0) $('.refill').text("없음");
+			else $('.refill').text("있음");
+			if (cancel === 0) $('.cancel').text("없음");
+			else $('.cancel').text("있음");
+		}
+
+		function submit() {
+			let form = $('#form').serializeObject();
+			console.log(form);
+			$('#form').submit();
+		};
+
 	</script>
 </body>
 
