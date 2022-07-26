@@ -14,6 +14,12 @@
         WHERE vendorName = #{vendor}
     </select>
 
+    <select id="getKey" parameterType="String" resultType="String">
+        SELECT apiKey
+        FROM TB_VENDOR
+        WHERE vendorName = #{vendor}
+    </select>
+
     <select id="getVendorByName" resultType="String">
         SELECT vendorName
         FROM TB_VENDOR

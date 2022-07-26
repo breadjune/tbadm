@@ -1,8 +1,10 @@
 package kr.co.metaboss.controller;
 
 import kr.co.metaboss.dto.smm.Order;
+import kr.co.metaboss.service.OrderService;
 import kr.co.metaboss.service.ProductService;
 import kr.co.metaboss.service.VendorService;
+import kr.co.metaboss.utils.JSONUtils;
 import kr.co.metaboss.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +21,7 @@ import java.util.List;
 @Log4j2
 public class trafficController {
 
+    private final OrderService orderService;
     private final ProductService productService;
     private final VendorService vendorService;
 
@@ -50,6 +53,7 @@ public class trafficController {
     @PostMapping("/order")
     public void order(Order order) {
         log.info("post order : " + order.toString());
+        orderService.addOrder(order);
     }
 
     @GetMapping("/orderList")

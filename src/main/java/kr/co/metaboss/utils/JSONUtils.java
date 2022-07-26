@@ -1,13 +1,17 @@
 package kr.co.metaboss.utils;
 
+import lombok.extern.log4j.Log4j2;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.security.core.parameters.P;
 import org.springframework.util.ObjectUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Log4j2
 public class JSONUtils {
 
 
@@ -44,5 +48,23 @@ public class JSONUtils {
             list.add(getMapFromJSONObject((JSONObject) jsonObject));
         }
         return list;
+    }
+
+    /**
+     * DTO -> JSONObject convert
+     * @param obj (dto parent object)
+     * @return JSONObject
+     */
+    public static JSONObject convertDtoToJsonObject(Object obj) {
+        JSONObject json = new JSONObject();
+        try {
+            for (Field f : obj.getClass().getDeclaredFields()) {
+                f.setAccessible(true);
+                if (f.get(obj) != null) json.put(f.getName(), f.get(obj));
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }

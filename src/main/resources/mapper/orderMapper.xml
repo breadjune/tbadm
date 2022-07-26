@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.metaboss.repository.VendorRepository">
+
+    <insert id="insertOrder" parameterType="java.util.HashMap">
+        INSERT INTO TB_ORDER (
+            vendor
+        ,   order_action
+        ,   service
+        ,   link
+        ,   quantity
+        ,   runs
+        ,   order_interval
+        ,   reg_date
+        ) VALUES
+        (
+            #{vendor}
+        ,   #{action}
+        ,   #{service}
+        ,   #{link}
+        ,   #{quantity}
+        ,   #{runs}
+        ,   #{interval}
+        ,   NOW()
+        )
+    </insert>
+</mapper>

@@ -4,6 +4,7 @@ import kr.co.metaboss.repository.VendorRepository;
 import kr.co.metaboss.vo.VendorVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class VendorService {
         return vendorRepository.getVendor(vendor);
     }
 
-    public List<String> getVendorByName() {
-        return vendorRepository.getVendorByName();
-    }
+    public String getKey(String vendor) { return vendorRepository.getKey(vendor); }
+
+    public List<String> getVendorByName() { return vendorRepository.getVendorByName(); }
 }
