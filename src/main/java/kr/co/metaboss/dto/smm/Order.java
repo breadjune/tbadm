@@ -10,9 +10,10 @@ import lombok.ToString;
 public class Order {
     String vendor;
     String action;
-    String service;
     String link;
-    String quantity;
-    String runs;
-    String interval;
+    String orderId;
+    String service;
+    int quantity;
+    int runs;
+    int interval;
 }

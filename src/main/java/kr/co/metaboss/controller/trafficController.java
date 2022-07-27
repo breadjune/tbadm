@@ -5,6 +5,7 @@ import kr.co.metaboss.service.OrderService;
 import kr.co.metaboss.service.ProductService;
 import kr.co.metaboss.service.VendorService;
 import kr.co.metaboss.utils.JSONUtils;
+import kr.co.metaboss.vo.OrderVO;
 import kr.co.metaboss.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -57,7 +58,23 @@ public class trafficController {
     }
 
     @GetMapping("/orderList")
-    public String orderList() { return "orderList"; }
+    public ModelAndView orderList() {
+        ModelAndView mav = new ModelAndView("orderList");
+        List<OrderVO> list = orderService.getOrderList("", "");
+        log.info("orderService.getOrderList : " + list);
+        mav.addObject("list", list);
+        return mav;
+    }
+
+    @PostMapping("/orderList")
+    public ModelAndView orderList(@RequestParam(defaultValue = "") String column,
+                                  @RequestParam(defaultValue = "") String value) {
+        ModelAndView mav = new ModelAndView("orderList");
+        List<OrderVO> list = orderService.getOrderList(column, value);
+        log.info("orderService.getOrderList : " + list);
+        mav.addObject("list", list);
+        return mav;
+    }
 
     @PostMapping("/getProduct")
     @ResponseBody

@@ -7,16 +7,14 @@
         SELECT *
         FROM TB_PRODUCT
         WHERE vendor = #{vendor}
-        AND productName LIKE '%korea%'
-        AND productName LIKE '%Traffic%'
+        AND productName LIKE '%South Korea Traffic%'
     </select>
 
     <select id="getTotalCountByVendor" parameterType="String" resultType="int">
         SELECT count(*)
         FROM TB_PRODUCT
         WHERE vendor = #{vendor}
-        AND productName LIKE '%korea%'
-        AND productName LIKE '%Traffic%'
+        AND productName LIKE '%South Korea Traffic%'
     </select>
 
     <select id="getProductServices" parameterType="String" resultType="java.util.List">
