@@ -36,26 +36,33 @@
 										<input type="String" class="form-control" name="action" value="add" readonly>
 										<br>
 										<p>서비스</p>
-										<select id="service" name="service" class="form-control">
-											<th:block th:each="product : ${products}">
-												<option th:text="${product.productName}" th:value="${product.service}"></option>
-											</th:block>
-										</select>
+										<input id="service" type="hidden" th:value="${products[0].service}">
+										<div class="btn-group dropdown-group" style="padding: 0">
+											<button id="serviceBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="text-align: left;">
+												<th:block th:text="${products[0].productName}"><span class="caret"></span></th:block>
+											</button>
+											<ul class="dropdown-menu" role="menu">
+												<li th:each="product : ${products}">
+													<a th:text="${product.productName}" th:value="${product.service}" onclick="getExchange(this)"></a>
+												</li>
+											</ul>
+										</div>
+										<br>
 										<br>
 										<div class="well">
 											<p><code>가격(1000개당)</code> : <span id="charge" th:text="${products[0].rate}+'$'"></span></p>
 											<p><code>최소 주문 개수</code> : <span id="minOrder" th:text="${products[0].minOrder}"></span></p>
 											<p><code>최대 주문 개수</code> : <span id="maxOrder" th:text="${products[0].maxOrder}"></span></p>
-											<p><code>리필 가능 여부</code> :
+											<p><code>리필</code> :
 												<th:block th:switch="${products[0].refill}">
-													<span class="refill" th:case="0">없음</span>
-													<span class="refill" th:case="1">있음</span>
+													<span class="refill" th:case="0">불가</span>
+													<span class="refill" th:case="1">가능</span>
 												</th:block>
 											</p>
-											<p><code>취소 가능 여부</code> :
+											<p><code>취소</code> :
 												<th:block th:switch="${products[0].cancel}">
-													<span class="cancel" th:case="0">없음</span>
-													<span class="cancel" th:case="1">있음</span>
+													<span class="cancel" th:case="0">불가</span>
+													<span class="cancel" th:case="1">가능</span>
 												</th:block>
 											</p>
 										</div>
@@ -126,9 +133,9 @@
 
 		$( document ).ready(function() {
 
-			$('#service').change(function () {
-				getExchange(this);
-			});
+			// $('#service').change(function () {
+			// 	getExchange(this);
+			// });
 
 			$('#order').keyup(function () {
 				this.value = this.value.replace(/(^0+)/,'');
@@ -171,6 +178,17 @@
 			});
 		});
 
+
+		// function serviceChange(element) {
+			// $('#service').val(element.value);
+			// $('#serviceBtn').text(element.text);
+		// 	getExchange(element);
+		// }
+
+		/**
+		 * 최종금액 적용
+		 * @param dripFeed(true|false)
+		 */
 		function totalAmount(dripFeed) {
 			const order = Number($('#order').val());
 			const run = Number($('#run').val());
@@ -183,10 +201,14 @@
 			else amount.val(parseFloat((rate*order).toFixed(7)));
 		}
 
-		function dripFeedCheck(el) {
+		/**
+		 * 드립피드 체크박스 선택
+		 * @param element(this)
+		 */
+		function dripFeedCheck(element) {
 			const dripFeedDiv = document.getElementById('dripFeedDiv');
 			const inputs = dripFeedDiv.querySelectorAll('input');
-			if(el.checked) {
+			if(element.checked) {
 				dripFeedDiv.style.display = 'block';
 				inputs.forEach(input => {
 					input.disabled = false;
@@ -201,6 +223,9 @@
 			}
 		}
 
+		/**
+		 * 실시간 환율정보
+		 */
 		function exchange() {
 			$.ajax({
 				type: "GET",
@@ -208,19 +233,26 @@
 				success: function (response) {
 					EXCHANGE = response[0]['basePrice'];
 					let service = document.getElementById('service').value;
-					const exchange = Number(SERVICE_MAP[service].rate)*Number(EXCHANGE);
-					$('#charge').text(SERVICE_MAP[service].rate+"($) | " + Math.ceil(exchange)+"(원)");
+					const exchange = Number(PRODUCTS[0].rate)*Number(EXCHANGE);
+					$('#charge').text(PRODUCTS[0].rate+"($) | " + Math.ceil(exchange)+"(원)");
 				}
 			})
 		}
 
+		/**
+		 * 서비스별 환율 적용
+		 * @param element(this)
+		 */
 		function getExchange(element) {
-			let service = element.value;
+			let service = element.getAttribute('value');
+			console.log('service value : ' + service);
 			const exchange = Number(SERVICE_MAP[service].rate)*Number(EXCHANGE);
 			const minOrder = Number(SERVICE_MAP[service]['minOrder']);
 			const maxOrder = Number(SERVICE_MAP[service]['maxOrder']);
 			const refill = Number(SERVICE_MAP[service]['refill']);
 			const cancel = Number(SERVICE_MAP[service]['cancel']);
+			$('#service').val(element.value);
+			$('#serviceBtn').text(element.text);
 			$('#charge').text(SERVICE_MAP[service].rate+"($) | " + Math.ceil(exchange)+"(원)");
 			$('#minOrder').text(minOrder);
 			$('#maxOrder').text(maxOrder);
@@ -230,6 +262,9 @@
 			else $('.cancel').text("있음");
 		}
 
+		/**
+		 * 주문 요청
+		 */
 		function submit() {
 			let form = $('#form').serializeObject();
 			console.log(form);

@@ -1,0 +1,31 @@
+.product-table-header thead tr th:nth-child(1) { min-width: 85px; }
+.product-table-header thead tr th:nth-child(2) { min-width: 81px; }
+.product-table-header thead tr th:nth-child(3) { min-width: 60px; }
+.product-table-header thead tr th:nth-child(4) { min-width: 68px; }
+.product-table-header thead tr th:nth-child(5) { min-width: 96px; }
+.product-table-header thead tr th:nth-child(6) { min-width: 68px; }
+.product-table-header thead tr th:nth-child(7) { min-width: 68px; }
+.product-table-header thead tr th:nth-child(8) { min-width: 60px; }
+.product-table-header thead tr th:nth-child(9) { min-width: 60px; }
+
+.order-table-header thead tr th:nth-child(1) { min-width: 60px; }
+.order-table-header thead tr th:nth-child(2) { min-width: 68px; }
+.order-table-header thead tr th:nth-child(3) { min-width: 68px; }
+.order-table-header thead tr th:nth-child(4) { min-width: 68px; }
+.order-table-header thead tr th:nth-child(5) { min-width: 81px; }
+.order-table-header thead tr th:nth-child(6) { min-width: 60px; }
+.order-table-header thead tr th:nth-child(7) { min-width: 68px; }
+.order-table-header thead tr th:nth-child(8) { min-width: 68px; }
+.order-table-header thead tr th:nth-child(9) { min-width: 68px; }
+.order-table-header thead tr th:nth-child(10) { min-width: 158px; }
+
+.search-float-right { width: 30%; min-width: 218px; float: right }
+
+.table-break-all { word-break: break-all; }
+
+.table-row-init { min-width: 900px; overflow-x: auto}
+
+.dropdown-group { width: 100%; min-width: 213px }
+.dropdown-group button { width: 100%; white-space: normal; text-align: left }
+.dropdown-group ul { width: 100%; max-height: 300px; overflow: scroll }
+.dropdown-group ul li a { white-space: normal }

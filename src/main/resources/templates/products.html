@@ -19,37 +19,40 @@
 				<div class="container-fluid">
 					<h3 class="page-title">트래픽 관리</h3>
 					<div class="row">
-						<div class="col-md-12" style="overflow-x: auto">
+						<div class="col-md-12 table-row-init">
 							<!-- TABLE STRIPED -->
 							<div class="panel">
 								<div class="panel-heading">
 									<h3 class="panel-title">상품 목록</h3>
+									<br>
 									<select id="vendorSelect" class="form-control" onchange="selectVendor(this)">
 										<option value="KINGS">KINGS</option>
 										<option value="JAP">JAP</option>
 									</select>
 								</div>
 								<div id="tables" class="panel-body">
-									<div class="input-group col-md-2">
+									<div class="input-group md-3 search-float-right">
 										<input class="form-control" type="text">
 										<span class="input-group-btn"><button class="btn btn-primary" type="button">검색</button></span>
 									</div>
 									<br>
-									<table class="table table-striped">
+									<br>
+									<br>
+									<table class="table table-striped product-table-header">
 										<thead>
 											<tr>
-												<th>공급 업체</th>
-												<th>서비스 번호</th>
+												<th>공급업체</th>
+												<th>서비스번호</th>
 												<th>상품</th>
 												<th>카테고리</th>
 												<th>비용(1000개)</th>
-												<th>최소 주문</th>
-												<th>최대 주문</th>
+												<th>최소주문</th>
+												<th>최대주문</th>
 												<th>리필</th>
 												<th>취소</th>
 											</tr>
 										</thead>
-										<tbody>
+										<tbody class="table-break-all">
 											<tr th:each="product : ${list}">
 												<td th:text="${product.vendor}"></td>
 												<td th:text="${product.service}"></td>
@@ -58,8 +61,14 @@
 												<td th:text="${product.rate}+'$'"></td>
 												<td th:text="${product.minOrder}"></td>
 												<td th:text="${product.maxOrder}"></td>
-												<td th:text="${product.refill}"></td>
-												<td th:text="${product.cancel}"></td>
+												<th:block th:switch="${product.refill}">
+													<td class="cancel" th:case="0">불가</td>
+													<td class="cancel" th:case="1">가능</td>
+												</th:block>
+												<th:block th:switch="${product.cancel}">
+													<td class="cancel" th:case="0">불가</td>
+													<td class="cancel" th:case="1">가능</td>
+												</th:block>
 											</tr>
 										</tbody>
 									</table>
