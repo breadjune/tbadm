@@ -3,12 +3,14 @@ package kr.co.metaboss.controller;
 import kr.co.metaboss.dto.smm.Order;
 import kr.co.metaboss.service.OrderService;
 import kr.co.metaboss.service.ProductService;
+import kr.co.metaboss.service.TrafficService;
 import kr.co.metaboss.service.VendorService;
 import kr.co.metaboss.utils.JSONUtils;
 import kr.co.metaboss.vo.OrderVO;
 import kr.co.metaboss.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,6 +27,7 @@ public class trafficController {
     private final OrderService orderService;
     private final ProductService productService;
     private final VendorService vendorService;
+    private final TrafficService trafficService;
 
     @GetMapping("/products")
     public ModelAndView getProducts(@RequestParam(defaultValue = "KINGS") String vendor) {
@@ -48,6 +51,7 @@ public class trafficController {
         ModelAndView mav = new ModelAndView("order");
         mav.addObject("vendors", vendorService.getVendorByName());
         mav.addObject("products", productService.getProductByVendor(vendor));
+        mav.addObject("balance", trafficService.getBalance(vendor));
         return mav;
     }
 
@@ -88,5 +92,11 @@ public class trafficController {
     public void updateProduct(String vendor) {
         productService.updateProduct(vendor);
     }
+
+//    @PostMapping("/balance")
+//    @ResponseBody
+//    public JSONObject getBalance(@RequestParam(defaultValue = "KINGS") String vendor) {
+//        return trafficService.getBalance(vendor);
+//    }
 
 }

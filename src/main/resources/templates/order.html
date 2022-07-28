@@ -21,22 +21,26 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="panel">
-								<div class="panel-heading">
+								<div class="panel-heading col-md-9">
 									<h3 class="panel-title">단일 주문</h3>
+								</div>
+								<div class="panel-heading col-md-3 text-right">
+									<div class="btn-group">
+										<div class="btn btn-default">남은금액 :</div>
+										<div class="btn btn-default" th:text="${balance}+'$'"></div>
+									</div>
 								</div>
 								<div class="panel-body">
 									<form id="form" action="order" method="post">
+										<input type="hidden" class="form-control" name="action" value="add">
 										<p>업체 선택</p>
 										<select name="vendor" class="form-control">
 											<option value="KINGS">KINGS</option>
 											<option value="JAP">JAP</option>
 										</select>
 										<br>
-										<p>상품 선택</p>
-										<input type="String" class="form-control" name="action" value="add" readonly>
-										<br>
 										<p>서비스</p>
-										<input id="service" type="hidden" th:value="${products[0].service}">
+										<input id="service" type="hidden" name="service" th:value="${products[0].service}">
 										<div class="btn-group dropdown-group" style="padding: 0">
 											<button id="serviceBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="text-align: left;">
 												<th:block th:text="${products[0].productName}"><span class="caret"></span></th:block>
@@ -109,8 +113,9 @@
 		<div class="clearfix"></div>
 		<footer>
 			<div class="container-fluid">
-				<p class="copyright">Shared by <i class="fa fa-love"></i><a href="https://bootstrapthemes.co">BootstrapThemes</a>
-</p>
+				<p class="copyright">
+					Shared by <i class="fa fa-love"></i><a href="https://bootstrapthemes.co">BootstrapThemes</a>
+				</p>
 			</div>
 		</footer>
 	</div>
@@ -133,8 +138,12 @@
 
 		$( document ).ready(function() {
 
-			// $('#service').change(function () {
-			// 	getExchange(this);
+			// $.ajax({
+			// 	url: "/traffic/balance",
+			// 	data: {"vendor":"KINGS"},
+			// 	type: "POST"
+			// }).done(function (data) {
+			// 	console.log(data);
 			// });
 
 			$('#order').keyup(function () {
