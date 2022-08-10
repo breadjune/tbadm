@@ -27,47 +27,44 @@
 								<div class="panel-heading col-md-3 text-right">
 									<div class="btn-group">
 										<div class="btn btn-default">남은금액 :</div>
-										<div class="btn btn-default" th:text="${balance}+'$'"></div>
+										<div id="balance" class="btn btn-default"><i class="fa fa-refresh fa-spin"></i></div>
 									</div>
 								</div>
 								<div class="panel-body">
-									<form id="form" action="order" method="post">
+									<form id="form" action="/traffic/addOrder" method="post">
 										<input type="hidden" class="form-control" name="action" value="add">
+										<input type="hidden" class="form-control" name="vendor" th:value="${vendors[0]}">
 										<p>업체 선택</p>
-										<select name="vendor" class="form-control">
-											<option value="KINGS">KINGS</option>
-											<option value="JAP">JAP</option>
-										</select>
-										<br>
-										<p>서비스</p>
-										<input id="service" type="hidden" name="service" th:value="${products[0].service}">
 										<div class="btn-group dropdown-group" style="padding: 0">
-											<button id="serviceBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="text-align: left;">
-												<th:block th:text="${products[0].productName}"><span class="caret"></span></th:block>
+											<button id="vendorBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="text-align: left;" th:text="${vendors[0]}" th:value="${vendors[0]}">
+												<span class="caret"></span>
 											</button>
 											<ul class="dropdown-menu" role="menu">
-												<li th:each="product : ${products}">
-													<a th:text="${product.productName}" th:value="${product.service}" onclick="getExchange(this)"></a>
+												<li th:each="vendor : ${vendors}">
+													<a th:text="${vendor}" th:value="${vendor}" onclick="getVendors(this)"></a>
 												</li>
 											</ul>
 										</div>
 										<br>
+										<p>서비스</p>
+										<input id="service" type="hidden" name="service">
+										<div class="btn-group dropdown-group" style="padding: 0">
+											<button id="serviceBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="text-align: left;">
+												<i class="fa fa-refresh fa-spin"></i>
+											</button>
+											<ul id="serviceUl" class="dropdown-menu" role="menu"></ul>
+										</div>
+										<br>
 										<br>
 										<div class="well">
-											<p><code>가격(1000개당)</code> : <span id="charge" th:text="${products[0].rate}+'$'"></span></p>
-											<p><code>최소 주문 개수</code> : <span id="minOrder" th:text="${products[0].minOrder}"></span></p>
-											<p><code>최대 주문 개수</code> : <span id="maxOrder" th:text="${products[0].maxOrder}"></span></p>
+											<p><code>가격(1000개당)</code> : <span id="charge"></span></p>
+											<p><code>최소 주문 개수</code> : <span id="minOrder"></span></p>
+											<p><code>최대 주문 개수</code> : <span id="maxOrder"></span></p>
 											<p><code>리필</code> :
-												<th:block th:switch="${products[0].refill}">
-													<span class="refill" th:case="0">불가</span>
-													<span class="refill" th:case="1">가능</span>
-												</th:block>
+												<span id="refill"></span>
 											</p>
 											<p><code>취소</code> :
-												<th:block th:switch="${products[0].cancel}">
-													<span class="cancel" th:case="0">불가</span>
-													<span class="cancel" th:case="1">가능</span>
-												</th:block>
+												<span id="cancel"></span>
 											</p>
 										</div>
 										<br>
@@ -94,7 +91,7 @@
 											<br>
 										</div>
 										<p id="pay_text">요금</p>
-										<input id="amount" name="amount" type="number" class="form-control" readonly>
+										<input id="amount" name="amount" type="text" class="form-control" readonly>
 										<br>
 									</form>
 									<div class="text-center">
@@ -124,27 +121,18 @@
 	<script src="/vendor/jquery/jquery.min.js"></script>
 	<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/vendor/toastr/toastr.min.js"></script>
 	<script src="/scripts/klorofil-common.js"></script>
 	<script src="/scripts/custom.js"></script>
-
 	<script th:inline="javascript">
-		const PRODUCTS = [[${products}]];
-		let EXCHANGE = "";
-		const SERVICE_MAP = new Object();
-		for (let i=0, pl=PRODUCTS.length; i<pl; i++) {
-			SERVICE_MAP[PRODUCTS[i]['service']] = PRODUCTS[i];
-		}
+		let PRODUCTS = new Object();
+		let EXCHANGE = 0;
 		exchange();
 
 		$( document ).ready(function() {
-
-			// $.ajax({
-			// 	url: "/traffic/balance",
-			// 	data: {"vendor":"KINGS"},
-			// 	type: "POST"
-			// }).done(function (data) {
-			// 	console.log(data);
-			// });
+			const vendor = document.getElementById("vendorBtn").value;
+			myRequests("/traffic/balance", {"vendor":vendor}, "POST", getBalance);
+			myRequests("/traffic/order", {"vendor":vendor}, "POST", getOrders);
 
 			$('#order').keyup(function () {
 				this.value = this.value.replace(/(^0+)/,'');
@@ -155,9 +143,9 @@
 			$('#order').blur(function () {
 				let order = Number(this.value);
 				const service = $('#service').val();
-				const minOrder = Number(SERVICE_MAP[service]['minOrder']);
-				const maxOrder = Number(SERVICE_MAP[service]['maxOrder']);
-				const rate = Number(SERVICE_MAP[service]['rate'])/1000;
+				const minOrder = Number(PRODUCTS[service]['minOrder']);
+				const maxOrder = Number(PRODUCTS[service]['maxOrder']);
+				const rate = Number(PRODUCTS[service]['rate'])/1000;
 
 				if (order < minOrder) {
 					this.value = minOrder;
@@ -176,7 +164,7 @@
 			$('#run').blur(function () {
 				const order = Number($('#order').val());
 				const service = $('#service').val();
-				const maxOrder = Number(SERVICE_MAP[service]['maxOrder']);
+				const maxOrder = Number(PRODUCTS[service]['maxOrder']);
 				let run = Number(this.value);
 				if (order*run > maxOrder) this.value = Math.floor(maxOrder/order);
 				totalAmount(true);
@@ -187,12 +175,62 @@
 			});
 		});
 
+		/**
+		 * 남은금액 확인 콜백 함수
+		 */
+		function getBalance(data) {
+			document.getElementById('balance').textContent = data;
+		}
 
-		// function serviceChange(element) {
-			// $('#service').val(element.value);
-			// $('#serviceBtn').text(element.text);
-		// 	getExchange(element);
-		// }
+		function getVendors(element) {
+			const vendorBtn = document.getElementById('vendorBtn');
+			const _value = element.getAttribute('value');
+			vendorBtn.textContent = _value;
+			vendorBtn.value = _value;
+			document.getElementsByName('vendor')[0].value = _value;
+			document.getElementById('balance').innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
+			myRequests("/traffic/balance", {"vendor":_value}, "POST", getBalance);
+			myRequests("/traffic/order", {"vendor":_value}, "POST", getOrders);
+		}
+
+		/**
+		 * 남은금액 확인 콜백 함수
+		 */
+		function getOrders(data) {
+			let _ul = document.getElementById('serviceUl');
+			while (_ul.hasChildNodes()) _ul.removeChild(_ul.firstChild);
+			for (let i=0, dl=data.length; i<dl; i++) {
+				const service = data[i]['service'];
+				const productName = data[i]['productName'];
+				const _li = document.createElement('li');
+				const _a = document.createElement('a');
+				_a.value = service;
+				_a.textContent = productName;
+				_a.addEventListener('click',(e) => setProduct(service));
+				_li.append(_a);
+				_ul.append(_li);
+				PRODUCTS[service] = data[i];
+			}
+
+			setProduct(data[0]['service']);
+		}
+
+		function setProduct(service) {
+			const exchange = Number(PRODUCTS[service]['rate'])*Number(EXCHANGE);
+			const minOrder = Number(PRODUCTS[service]['minOrder']);
+			const maxOrder = Number(PRODUCTS[service]['maxOrder']);
+			const refill = Number(PRODUCTS[service]['refill']);
+			const cancel = Number(PRODUCTS[service]['cancel']);
+			$('#service').val(service);
+			$('#serviceBtn').text(PRODUCTS[service]['productName']);
+			$('#charge').text(PRODUCTS[service].rate+"($) | " + Math.ceil(exchange)+"(원)");
+			$('#minOrder').text(minOrder);
+			$('#maxOrder').text(maxOrder);
+			if (refill === 0) $('#refill').text("없음");
+			else $('#refill').text("있음");
+			if (cancel === 0) $('#cancel').text("없음");
+			else $('#cancel').text("있음");
+		}
 
 		/**
 		 * 최종금액 적용
@@ -204,7 +242,7 @@
 			const service = $('#service').val();
 			const amount = $('#amount');
 			const totalOrder = $('#totalOrder');
-			const rate = Number(SERVICE_MAP[service]['rate'])/1000;
+			const rate = Number(PRODUCTS[service]['rate'])/1000;
 			totalOrder.val(order*run);
 			if(dripFeed) amount.val(parseFloat(((rate*order)*run).toFixed(7)));
 			else amount.val(parseFloat((rate*order).toFixed(7)));
@@ -240,35 +278,10 @@
 				type: "GET",
 				url: "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD",
 				success: function (response) {
-					EXCHANGE = response[0]['basePrice'];
-					let service = document.getElementById('service').value;
-					const exchange = Number(PRODUCTS[0].rate)*Number(EXCHANGE);
-					$('#charge').text(PRODUCTS[0].rate+"($) | " + Math.ceil(exchange)+"(원)");
+					console.log("exchange1 : " + response[0]['basePrice']);
+					EXCHANGE = Number(response[0]['basePrice']);
 				}
 			})
-		}
-
-		/**
-		 * 서비스별 환율 적용
-		 * @param element(this)
-		 */
-		function getExchange(element) {
-			let service = element.getAttribute('value');
-			console.log('service value : ' + service);
-			const exchange = Number(SERVICE_MAP[service].rate)*Number(EXCHANGE);
-			const minOrder = Number(SERVICE_MAP[service]['minOrder']);
-			const maxOrder = Number(SERVICE_MAP[service]['maxOrder']);
-			const refill = Number(SERVICE_MAP[service]['refill']);
-			const cancel = Number(SERVICE_MAP[service]['cancel']);
-			$('#service').val(element.value);
-			$('#serviceBtn').text(element.text);
-			$('#charge').text(SERVICE_MAP[service].rate+"($) | " + Math.ceil(exchange)+"(원)");
-			$('#minOrder').text(minOrder);
-			$('#maxOrder').text(maxOrder);
-			if (refill === 0) $('.refill').text("없음");
-			else $('.refill').text("있음");
-			if (cancel === 0) $('.cancel').text("없음");
-			else $('.cancel').text("있음");
 		}
 
 		/**
@@ -277,9 +290,28 @@
 		function submit() {
 			let form = $('#form').serializeObject();
 			console.log(form);
-			$('#form').submit();
+			$.ajax({
+				url: "/traffic/addOrder",
+				data: form,
+				type: "POST"
+			}).done(function () {
+				alert('요청이 완료되었습니다.');
+				// toast('요청이 완료되었습니다.', 'success');
+			}).fail(function () {
+				toast('요청에 실패하였습니다.', 'error');
+			});
 		};
 
+
+		/**
+		 * 토스트 메시지
+		 */
+		function toast(msg, type) {
+			console.log('toast!!');
+			toastr.options.timeOut = "3000";
+			toastr.options.closeButton = false;
+			toastr[type](msg, '' , { positionClass: 'toast-bottom-right' });
+		}
 	</script>
 </body>
 

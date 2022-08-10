@@ -6,12 +6,13 @@
     <select id="getOrder" parameterType="String" resultType="kr.co.metaboss.vo.OrderVO">
         SELECT *
         FROM TB_ORDER
+        WHERE vendor = #{vendor}
         <if test="column != ''">
-            WHERE #{column} LIKE CONCAT( '%', #{value}, '%' )
+            AND #{column} LIKE CONCAT( '%', #{value}, '%' )
         </if>
     </select>
 
-    <insert id="insertOrder" parameterType="kr.co.metaboss.dto.smm.Order">
+    <insert id="insertOrder" parameterType="kr.co.metaboss.dto.traffic.Order">
         INSERT INTO TB_ORDER (
             orderId
         ,   vendor

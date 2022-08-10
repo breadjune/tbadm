@@ -1,4 +1,4 @@
-package kr.co.metaboss.dto.smm;
+package kr.co.metaboss.dto.traffic;
 
 import lombok.Getter;
 import lombok.Setter;

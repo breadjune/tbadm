@@ -31,29 +31,31 @@
 											<tr>
 												<th>넘버</th>
 												<th>주문번호</th>
-												<th>공급업체</th>
 												<th>주문타입</th>
 												<th>서비스번호</th>
 												<th>링크</th>
-												<th>주문개수</th>
 												<th>반복개수</th>
 												<th>반복주기</th>
+												<th>금액</th>
+												<th>주문개수</th>
+												<th>남은개수</th>
+												<th>상태</th>
 												<th>생성일자</th>
 											</tr>
 											</thead>
 											<tbody>
-											<tr th:each="order,count : ${list}" onclick="">
-												<td th:text="${count.count}"></td>
-												<td th:text="${order.orderId}"></td>
-												<td th:text="${order.vendor}"></td>
-												<td th:text="${order.orderAction}"></td>
-												<td th:text="${order.service}+'$'"></td>
-												<td th:text="${order.link}"></td>
-												<td th:text="${order.quantity}"></td>
-												<td th:text="${order.runs}"></td>
-												<td th:text="${order.orderInterval}"></td>
-												<td th:text="${order.regDate}"></td>
-											</tr>
+<!--											<tr th:each="order,count : ${list}" onclick="">-->
+<!--												<td th:text="${count.count}"></td>-->
+<!--												<td th:text="${order.orderId}"></td>-->
+<!--												<td th:text="${order.vendor}"></td>-->
+<!--												<td th:text="${order.orderAction}"></td>-->
+<!--												<td th:text="${order.service}+'$'"></td>-->
+<!--												<td th:text="${order.link}"></td>-->
+<!--												<td th:text="${order.quantity}"></td>-->
+<!--												<td th:text="${order.runs}"></td>-->
+<!--												<td th:text="${order.orderInterval}"></td>-->
+<!--												<td th:text="${order.regDate}"></td>-->
+<!--											</tr>-->
 											</tbody>
 										</table>
 									</div>
@@ -81,7 +83,19 @@
 		<script src="/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 		<script src="/scripts/klorofil-common.js"></script>
 		<script src="/scripts/custom.js"></script>
+		<script>
+			$(document).ready(function() {
+				myRequests("/traffic/orderList", {"vendor":"JAP"}, "POST", getOrderList);
 
+			});
+
+			/**
+			 * 주문 리스트 콜백 함수
+			 */
+			function getOrderList(data) {
+				console.log(data);
+			}
+		</script>
 	</body>
 
 </html>

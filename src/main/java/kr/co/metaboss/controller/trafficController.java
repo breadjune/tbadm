@@ -1,21 +1,18 @@
 package kr.co.metaboss.controller;
 
-import kr.co.metaboss.dto.smm.Order;
+import kr.co.metaboss.dto.traffic.Order;
 import kr.co.metaboss.service.OrderService;
 import kr.co.metaboss.service.ProductService;
 import kr.co.metaboss.service.TrafficService;
 import kr.co.metaboss.service.VendorService;
-import kr.co.metaboss.utils.JSONUtils;
 import kr.co.metaboss.vo.OrderVO;
 import kr.co.metaboss.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -47,34 +44,38 @@ public class trafficController {
     }
 
     @GetMapping("/order")
-    public ModelAndView order(@RequestParam(defaultValue = "KINGS") String vendor) {
+    public ModelAndView order() {
         ModelAndView mav = new ModelAndView("order");
-        mav.addObject("vendors", vendorService.getVendorByName());
-        mav.addObject("products", productService.getProductByVendor(vendor));
-        mav.addObject("balance", trafficService.getBalance(vendor));
+        List<String> vendors = vendorService.getVendorByName();
+        mav.addObject("vendors", vendors);
+//        mav.addObject("products", productService.getProductByVendor(vendors.get(0)));
         return mav;
     }
 
     @PostMapping("/order")
-    public void order(Order order) {
-        log.info("post order : " + order.toString());
-        orderService.addOrder(order);
+    @ResponseBody
+    public List<ProductVO> order(String vendor) {
+       return productService.getProductByVendor(vendor);
+    }
+
+    @PostMapping("/addOrder")
+    public String addOrder(Order order) {
+        log.info("addOrder : " + order);
+        trafficService.addOrder(order);
+        return "redirect:/traffic/order";
     }
 
     @GetMapping("/orderList")
     public ModelAndView orderList() {
-        ModelAndView mav = new ModelAndView("orderList");
-        List<OrderVO> list = orderService.getOrderList("", "");
-        log.info("orderService.getOrderList : " + list);
-        mav.addObject("list", list);
-        return mav;
+        return new ModelAndView("orderList");
     }
 
     @PostMapping("/orderList")
-    public ModelAndView orderList(@RequestParam(defaultValue = "") String column,
+    public ModelAndView orderList(@RequestParam(required = false) String vendor,
+                                  @RequestParam(defaultValue = "") String column,
                                   @RequestParam(defaultValue = "") String value) {
         ModelAndView mav = new ModelAndView("orderList");
-        List<OrderVO> list = orderService.getOrderList(column, value);
+        List<OrderVO> list = orderService.getOrderList(vendor, column, value);
         log.info("orderService.getOrderList : " + list);
         mav.addObject("list", list);
         return mav;
@@ -93,10 +94,10 @@ public class trafficController {
         productService.updateProduct(vendor);
     }
 
-//    @PostMapping("/balance")
-//    @ResponseBody
-//    public JSONObject getBalance(@RequestParam(defaultValue = "KINGS") String vendor) {
-//        return trafficService.getBalance(vendor);
-//    }
+    @PostMapping("/balance")
+    @ResponseBody
+    public String getBalance(@RequestParam(defaultValue = "KINGS") String vendor) {
+        return trafficService.getBalance(vendor);
+    }
 
 }

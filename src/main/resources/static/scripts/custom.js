@@ -1,5 +1,8 @@
-// function trafficPage (target) {
-//     const _className = target.className;
-//     if (_className === 'collapsed') localStorage.setItem("trafficPage", "on");
-//     else localStorage.setItem("trafficPage", "off");
-// }
+async function myRequests(url, data, method, callback) {
+    $.ajax({
+        url: url,
+        data: data,
+        type: method,
+        success: callback
+    });
+}
