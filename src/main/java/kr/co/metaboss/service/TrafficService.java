@@ -26,11 +26,11 @@ public class TrafficService extends VendorService {
         VendorVO vendorVO = getVendor(order.getVendor());
         json.remove("vendor");
         json.put("key", vendorVO.getApiKey());
-//        Requests requests = new Requests(vendorVO.getUrl(), json);
-//        JSONObject response = requests.postAndObjectResponse();
-//        order.setOrderId(String.valueOf(response.getInt("order")));
+        Requests requests = new Requests(vendorVO.getUrl(), json);
+        JSONObject response = requests.postAndObjectResponse();
+        order.setOrderId(String.valueOf(response.getInt("order")));
         //[TODO] 임시 주문 번호 생성 (개발 완료 후 삭제 필요!!)
-        order.setOrderId("329888060");
+//        order.setOrderId("329888060");
         return orderRepository.insertOrder(order);
     }
 
