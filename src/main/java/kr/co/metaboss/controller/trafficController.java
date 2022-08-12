@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -71,14 +72,11 @@ public class trafficController {
     }
 
     @PostMapping("/orderList")
-    public ModelAndView orderList(@RequestParam(required = false) String vendor,
+    @ResponseBody
+    public Map<String, Object> orderList(@RequestParam(required = false) String vendor,
                                   @RequestParam(defaultValue = "") String column,
                                   @RequestParam(defaultValue = "") String value) {
-        ModelAndView mav = new ModelAndView("orderList");
-        List<OrderVO> list = orderService.getOrderList(vendor, column, value);
-        log.info("orderService.getOrderList : " + list);
-        mav.addObject("list", list);
-        return mav;
+        return orderService.getOrderList(vendor, column, value);
     }
 
     @PostMapping("/getProduct")

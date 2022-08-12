@@ -21,6 +21,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/signup.do")
                 .antMatchers("/img/**")
+                .antMatchers("/video/**")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 

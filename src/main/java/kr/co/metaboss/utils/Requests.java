@@ -57,6 +57,7 @@ public class Requests {
         } catch (IOException e) {
             log.error(e.getStackTrace());
         }
+        log.info("result : " + result);
         return result;
     }
 }

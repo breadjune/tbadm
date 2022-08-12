@@ -44,18 +44,12 @@
 											</tr>
 											</thead>
 											<tbody>
-<!--											<tr th:each="order,count : ${list}" onclick="">-->
-<!--												<td th:text="${count.count}"></td>-->
-<!--												<td th:text="${order.orderId}"></td>-->
-<!--												<td th:text="${order.vendor}"></td>-->
-<!--												<td th:text="${order.orderAction}"></td>-->
-<!--												<td th:text="${order.service}+'$'"></td>-->
-<!--												<td th:text="${order.link}"></td>-->
-<!--												<td th:text="${order.quantity}"></td>-->
-<!--												<td th:text="${order.runs}"></td>-->
-<!--												<td th:text="${order.orderInterval}"></td>-->
-<!--												<td th:text="${order.regDate}"></td>-->
-<!--											</tr>-->
+												<tr>
+													<td id="loading" colspan="12" style="text-align: center">
+														<i class="fa fa-refresh fa-spin"></i>
+														loading...
+													</td>
+												</tr>
 											</tbody>
 										</table>
 									</div>
@@ -86,14 +80,25 @@
 		<script>
 			$(document).ready(function() {
 				myRequests("/traffic/orderList", {"vendor":"JAP"}, "POST", getOrderList);
-
 			});
 
 			/**
 			 * 주문 리스트 콜백 함수
 			 */
 			function getOrderList(data) {
-				console.log(data);
+				console.log("list : ", data.list);
+				console.log("list typeof : ", typeof data.list);
+				console.log("list[0].keys : ", Object.keys(data.list[0]));
+				console.log("response : ", JSON.parse(data.response));
+				let _tbody = document.getElementsByTagName('tbody')[0];
+				for (let i=0, ll=data.list.length; i<ll; i++) {
+					const keys = Object.keys(data.list[i]);
+					let _tr = document.createElement('tr');
+					keys.forEach(k => {
+						let _td = document.createElement('td');
+						_td.innerText =
+					})
+				}
 			}
 		</script>
 	</body>

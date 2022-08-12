@@ -4,9 +4,9 @@ spring:
       static-locations: classpath:/static/
 
   datasource:
-    url: jdbc:mysql://localhost:3306/trafficboss?characterEncoding=utf8
+    url: jdbc:mysql://metaboss.co.kr:3306/metaboss?characterEncoding=utf8
     username: metaboss
-    password: dudwnsl1993!
+    password: qndhkauddPfmf1!
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis:
