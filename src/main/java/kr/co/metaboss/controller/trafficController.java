@@ -68,7 +68,10 @@ public class trafficController {
 
     @GetMapping("/orderList")
     public ModelAndView orderList() {
-        return new ModelAndView("orderList");
+        ModelAndView mav = new ModelAndView("orderList");
+        List<String> vendors = vendorService.getVendorByName();
+        mav.addObject("vendors", vendors);
+        return mav;
     }
 
     @PostMapping("/orderList")

@@ -24,13 +24,20 @@
 								<div class="panel">
 									<div class="panel-heading">
 										<h3 class="panel-title">주문 내역</h3>
-										<br>
-										<select id="vendorSelect" class="form-control" onchange="selectVendor(this)">
-											<option value="KINGS">KINGS</option>
-											<option value="JAP">JAP</option>
-										</select>
 									</div>
 									<div class="panel-body table-responsive">
+										<div class="btn-group dropdown-group" style="padding: 0">
+											<button id="vendorBtn" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="text-align: left;" th:text="${vendors[0]}" th:value="${vendors[0]}">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu" role="menu">
+												<li th:each="vendor : ${vendors}">
+													<a th:text="${vendor}" th:value="${vendor}" onclick="getVendors(this)"></a>
+												</li>
+											</ul>
+										</div>
+										<br>
+										<br>
 										<div class="input-group md-3 search-float-right">
 											<input class="form-control" type="text">
 											<span class="input-group-btn"><button class="btn btn-primary" type="button">검색</button></span>
@@ -40,20 +47,20 @@
 										<br>
 										<table class="table table-striped table-hover order-table-header">
 											<thead>
-											<tr>
-												<th name="no">넘버</th>
-												<th name="orderId">주문번호</th>
-												<th name="orderAction">주문타입</th>
-												<th name="service">서비스번호</th>
-												<th name="link">링크</th>
-												<th name="runs">반복개수</th>
-												<th name="orderInterval">반복주기</th>
-												<th name="charge">금액</th>
-												<th name="quantity">주문개수</th>
-												<th name="remains">남은개수</th>
-												<th name="status">상태</th>
-												<th name="regDate">생성일자</th>
-											</tr>
+												<tr>
+													<th name="no">넘버</th>
+													<th name="orderId">주문번호</th>
+													<th name="orderAction">주문타입</th>
+													<th name="service">서비스번호</th>
+													<th name="link">링크</th>
+													<th name="runs">반복개수</th>
+													<th name="orderInterval">반복주기</th>
+													<th name="charge">금액</th>
+													<th name="quantity">주문개수</th>
+													<th name="remains">남은개수</th>
+													<th name="status">상태</th>
+													<th name="regDate">생성일자</th>
+												</tr>
 											</thead>
 											<tbody>
 												<tr>
@@ -67,6 +74,24 @@
 									</div>
 								</div>
 								<!-- END TABLE STRIPED -->
+								<div class="text-center">
+									<nav aria-label="Page navigation example">
+										<ul class="pagination">
+											<li class="page-item disabled">
+												<a class="page-link" href="#" aria-label="Previous">
+													<span aria-hidden="true">&laquo;</span>
+												</a>
+											</li>
+<!--											<li class="page-item" th:each="num:${#numbers.sequence(1, count)}"><a class="page-link" href="#" onclick="paging(this)" th:text="${numStat.count}"></a></li>-->
+											<li class="page-item"><a class="page-link" href="#" onclick="paging(this)">1</a></li>
+											<li class="page-item">
+												<a class="page-link" href="#" aria-label="Next">
+													<span aria-hidden="true">&raquo;</span>
+												</a>
+											</li>
+										</ul>
+									</nav>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -91,23 +116,20 @@
 		<script src="/scripts/custom.js"></script>
 		<script>
 			$(document).ready(function() {
-				myRequests("/traffic/orderList", {"vendor":"JAP"}, "POST", getOrderList);
+				const vendor = document.getElementById('vendorBtn').value;
+				myRequests("/traffic/orderList", {"vendor": vendor}, "POST", getOrderList);
 			});
 
 			/**
 			 * 주문 리스트 콜백 함수
 			 */
 			function getOrderList(data) {
+				document.getElementById('loading').style.display = 'none';
 				const res = JSON.parse(data.response);
 				let $tbody = document.getElementsByTagName('tbody')[0];
 				let $th = document.getElementsByTagName('th');
 				for (let i=0, ll=data.list.length; i<ll; i++) {
-					console.log("list["+i+"] : ", data.list[i]);
-					console.log("response["+data.list[i]["orderId"]+"] : ", res[data.list[i]['orderId']]);
-					console.log("response["+data.list[i]["orderId"]+"][charge] : ", res[data.list[i]['orderId']]['charge']);
-
 					const keys = Object.keys(data.list[i]);
-					console.log("keys : ", keys);
 					let $tr = document.createElement('tr');
 					for (let j=0, jl=$th.length; j<jl; j++) {
 						let $td = document.createElement('td');
@@ -120,6 +142,16 @@
 					}
 					$tbody.appendChild($tr);
 				}
+			}
+
+			function getVendors(element) {
+				const vendorBtn = document.getElementById('vendorBtn');
+				const _value = element.getAttribute('value');
+				vendorBtn.textContent = _value;
+				vendorBtn.value = _value;
+				document.getElementsByName('vendor')[0].value = _value;
+				document.getElementById('balance').innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
+				myRequests("/traffic/orderList", {"vendor":_value}, "POST", getOrders);
 			}
 		</script>
 	</body>
