@@ -1,5 +1,6 @@
 package kr.co.metaboss.controller;
 
+import kr.co.metaboss.dto.common.Search;
 import kr.co.metaboss.dto.traffic.Order;
 import kr.co.metaboss.service.OrderService;
 import kr.co.metaboss.service.ProductService;
@@ -76,10 +77,8 @@ public class trafficController {
 
     @PostMapping("/orderList")
     @ResponseBody
-    public Map<String, Object> orderList(@RequestParam(required = false) String vendor,
-                                  @RequestParam(defaultValue = "") String column,
-                                  @RequestParam(defaultValue = "") String value) {
-        return orderService.getOrderList(vendor, column, value);
+    public Map<String, Object> orderList(Search search) {
+        return orderService.getOrderList(search);
     }
 
     @PostMapping("/getProduct")

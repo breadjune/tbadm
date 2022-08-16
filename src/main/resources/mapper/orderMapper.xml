@@ -3,13 +3,25 @@
 
 <mapper namespace="kr.co.metaboss.repository.OrderRepository">
 
-    <select id="getOrder" parameterType="String" resultType="kr.co.metaboss.vo.OrderVO">
+    <select id="getOrder" parameterType="kr.co.metaboss.dto.common.Search" resultType="kr.co.metaboss.vo.OrderVO">
         SELECT *
         FROM TB_ORDER
         WHERE vendor = #{vendor}
-        <if test="column != ''">
-            AND #{column} LIKE CONCAT( '%', #{value}, '%' )
+        <if test="keyword != ''">
+            AND (
+                orderId LIKE CONCAT( '%', #{keyword}, '%' )
+             OR service LIKE CONCAT( '%', #{keyword}, '%' )
+             OR link LIKE CONCAT( '%', #{keyword}, '%' )
+             OR quantity LIKE CONCAT( '%', #{keyword}, '%' )
+             OR runs LIKE CONCAT( '%', #{keyword}, '%' )
+             OR orderInterval LIKE CONCAT( '%', #{keyword}, '%' )
+             OR regDate LIKE CONCAT( '%', #{keyword}, '%' )
+            )
         </if>
+        <if test="sortColumn != ''">
+            ORDER BY #{sortColumn} #{sortType}
+        </if>
+        LIMIT ${offset}, ${recodeSize}
     </select>
 
     <insert id="insertOrder" parameterType="kr.co.metaboss.dto.traffic.Order">

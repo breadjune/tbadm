@@ -1,5 +1,6 @@
 package kr.co.metaboss.service;
 
+import kr.co.metaboss.dto.common.Search;
 import kr.co.metaboss.dto.traffic.Order;
 import kr.co.metaboss.repository.OrderRepository;
 import kr.co.metaboss.repository.VendorRepository;
@@ -28,9 +29,9 @@ public class OrderService extends VendorService {
         this.orderRepository = orderRepository;
     }
 
-    public Map<String, Object> getOrderList(String vendor, String column, String value) {
-        VendorVO vendorVO = getVendor(vendor);
-        List<OrderVO> list = orderRepository.getOrder(vendor, column, value);
+    public Map<String, Object> getOrderList(Search search) {
+        VendorVO vendorVO = getVendor(search.getVendor());
+        List<OrderVO> list = orderRepository.getOrder(search);
         List<String> idList = new ArrayList<>();
         for (int i=0; i<list.size(); i++) idList.add(list.get(i).getOrderId());
         String ids = String.join(",", idList);
