@@ -24,6 +24,23 @@
         LIMIT ${offset}, ${recodeSize}
     </select>
 
+    <select id="getOrderCount" parameterType="kr.co.metaboss.dto.common.Search" resultType="String">
+        SELECT count(*)
+        FROM TB_ORDER
+        WHERE vendor = #{vendor}
+        <if test="keyword != ''">
+            AND (
+            orderId LIKE CONCAT( '%', #{keyword}, '%' )
+            OR service LIKE CONCAT( '%', #{keyword}, '%' )
+            OR link LIKE CONCAT( '%', #{keyword}, '%' )
+            OR quantity LIKE CONCAT( '%', #{keyword}, '%' )
+            OR runs LIKE CONCAT( '%', #{keyword}, '%' )
+            OR orderInterval LIKE CONCAT( '%', #{keyword}, '%' )
+            OR regDate LIKE CONCAT( '%', #{keyword}, '%' )
+            )
+        </if>
+    </select>
+
     <insert id="insertOrder" parameterType="kr.co.metaboss.dto.traffic.Order">
         INSERT INTO TB_ORDER (
             orderId

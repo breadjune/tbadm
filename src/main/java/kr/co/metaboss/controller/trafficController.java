@@ -6,7 +6,6 @@ import kr.co.metaboss.service.OrderService;
 import kr.co.metaboss.service.ProductService;
 import kr.co.metaboss.service.TrafficService;
 import kr.co.metaboss.service.VendorService;
-import kr.co.metaboss.vo.OrderVO;
 import kr.co.metaboss.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -50,7 +49,6 @@ public class trafficController {
         ModelAndView mav = new ModelAndView("order");
         List<String> vendors = vendorService.getVendorByName();
         mav.addObject("vendors", vendors);
-//        mav.addObject("products", productService.getProductByVendor(vendors.get(0)));
         return mav;
     }
 

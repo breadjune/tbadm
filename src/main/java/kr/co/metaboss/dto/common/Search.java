@@ -20,10 +20,12 @@ public class Search {
         this.recodeSize = 10;
         this.pageSize = 10;
         this.keyword = "";
-        this.sortColumn = "";
+        this.sortColumn = "regDate";
+        this.sortType = "DESC";
     }
 
     public int getOffset() {
         return (page -1) * recodeSize;
     }
+
 }

@@ -12,5 +12,6 @@ import java.util.List;
 @Mapper
 public interface OrderRepository {
     List<OrderVO> getOrder(Search search);
+    String getOrderCount(Search search);
     int insertOrder(Order order);
 }

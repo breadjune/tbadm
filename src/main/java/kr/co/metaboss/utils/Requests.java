@@ -20,14 +20,21 @@ public class Requests {
     }
 
     public JSONArray postAndArrayResponse() {
-        return new JSONArray(this.post());
+        String response = this.post();
+        if (!response.isEmpty()) return new JSONArray(response);
+        else return null;
     }
 
     public JSONObject postAndObjectResponse() {
-        return new JSONObject(this.post());
+        String response = this.post();
+        log.info("response : " + response);
+        if (!response.isEmpty()) {
+            return new JSONObject(response);
+        } else return null;
     }
 
-    private String post() {
+    public String post() {
+        log.info("data : " + this.data.toString());
         HttpURLConnection conn;
         String result = "";
         try {
@@ -57,7 +64,6 @@ public class Requests {
         } catch (IOException e) {
             log.error(e.getStackTrace());
         }
-        log.info("result : " + result);
         return result;
     }
 }
