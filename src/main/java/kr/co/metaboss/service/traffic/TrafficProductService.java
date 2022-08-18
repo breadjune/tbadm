@@ -1,4 +1,4 @@
-package kr.co.metaboss.service;
+package kr.co.metaboss.service.traffic;
 
 import kr.co.metaboss.repository.ProductRepository;
 import kr.co.metaboss.repository.VendorRepository;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Log4j2
 @RequiredArgsConstructor
 @Service
-public class ProductService {
+public class TrafficProductService {
 
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;

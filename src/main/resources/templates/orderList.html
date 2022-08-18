@@ -77,18 +77,18 @@
 								<div class="text-center">
 									<nav aria-label="Page navigation example">
 										<ul class="pagination">
-											<li class="page-item disabled">
-												<a class="page-link" href="#" aria-label="Previous">
-													<span aria-hidden="true">&laquo;</span>
-												</a>
-											</li>
+<!--											<li class="page-item disabled">-->
+<!--												<a class="page-link" href="#" aria-label="Previous">-->
+<!--													<span aria-hidden="true">&laquo;</span>-->
+<!--												</a>-->
+<!--											</li>-->
 <!--											<li class="page-item" th:each="num:${#numbers.sequence(1, count)}"><a class="page-link" href="#" onclick="paging(this)" th:text="${numStat.count}"></a></li>-->
-											<li class="page-item"><a class="page-link" href="#" onclick="paging(this)">1</a></li>
-											<li class="page-item">
-												<a class="page-link" href="#" aria-label="Next">
-													<span aria-hidden="true">&raquo;</span>
-												</a>
-											</li>
+<!--											<li class="page-item"><a class="page-link" href="#" onclick="paging(this)">1</a></li>-->
+<!--											<li class="page-item">-->
+<!--												<a class="page-link" href="#" aria-label="Next">-->
+<!--													<span aria-hidden="true">&raquo;</span>-->
+<!--												</a>-->
+<!--											</li>-->
 										</ul>
 									</nav>
 								</div>
@@ -117,28 +117,29 @@
 		<script>
 			$(document).ready(function() {
 				const vendor = document.getElementById('vendorBtn').value;
-				myRequests("/traffic/orderList", {"vendor": vendor}, "POST", getOrderList);
+				myRequests("/traffic/pageSize", {"vendor": vendor}, "POST", paginationCallback);
+				myRequests("/traffic/orderList", {"vendor": vendor}, "POST", orderListCallback);
 			});
 
 			/**
 			 * 주문 리스트 콜백 함수
 			 */
-			function getOrderList(data) {
-				var res;
-				if (data.response != undefined) res = JSON.parse(data.response);
+			function orderListCallback(data) {
 				let $tbody = document.getElementsByTagName('tbody')[0];
 				let $th = document.getElementsByTagName('th');
 				if (data.list.length > 0) {
 					document.getElementById('loading').style.display = 'none';
-					for (let i = 0, ll = data.list.length; i < ll; i++) {
+					for (let i =0, ll = data.list.length; i < ll; i++) {
+						let index = (((Number(data.search['page'])-1) * data.search['recodeSize']) + 1) + i;
 						const keys = Object.keys(data.list[i]);
 						let $tr = document.createElement('tr');
 						for (let j = 0, jl = $th.length; j < jl; j++) {
 							let $td = document.createElement('td');
 							let _name = $th[j].getAttribute('name');
-							if (_name === 'no') $td.innerText = String(i + 1);
+							if (_name === 'no') $td.innerText = String(index);
 							else if (keys.includes(_name)) $td.innerText = data.list[i][_name];
-							else if (res != undefined) {
+							else if (data.status != undefined) {
+								const res = JSON.parse(data.status);
 								if (res[data.list[i]['orderId']][_name] != undefined) $td.innerText = res[data.list[i]['orderId']][_name];
 								else $td.innerText = '-';
 							} else $td.innerText = '-';
@@ -149,20 +150,42 @@
 				} else setLoading(false, '데이터가 없습니다.');
 			}
 
+			function paginationCallback(data) {
+				const currentPage = Number(data['currentPage']);
+				const pageSize = Number(data['pageSize']);
+				let $pagination = '';
+				if (currentPage !== 1) $pagination += '<li class="page-item"><a class="page-link" href="#" aria-label="Previous" onclick="getPage('+(currentPage-1)+')"><span aria-hidden="true">&laquo;</span></a></li>';
+				else $pagination += '<li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+				for (let i=1; i<=pageSize; i++) {
+					if (currentPage !== i) $pagination += '<li class="page-item"><a class="page-link" href="#" onclick="getPage('+i+')">'+i+'</a></li>';
+					else $pagination += '<li class="page-item active"><a class="page-link" href="#" onclick="getPage('+i+')">'+i+'</a></li>';
+				}
+				if (currentPage !== pageSize) $pagination += '<li class="page-item"><a class="page-link" href="#" aria-label="Next" onclick="getPage('+(currentPage+1)+')"><span aria-hidden="true">&raquo;</span></a></li>';
+				else $pagination += '<li class="page-item disabled"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
+				document.querySelector('.pagination').innerHTML = $pagination;
+			}
+
 			function getVendors(element) {
 				setLoading(true, '\nloading...')
 				const vendorBtn = document.getElementById('vendorBtn');
 				const _value = element.getAttribute('value');
 				vendorBtn.textContent = _value;
 				vendorBtn.value = _value;
-				myRequests("/traffic/orderList", {"vendor":_value}, "POST", getOrderList);
+				myRequests("/traffic/orderList", {"vendor":_value}, "POST", orderListCallback);
 			}
 
 			function getSearch() {
 				setLoading(true, '\nloading...')
 				const _vendor = document.getElementById('vendorBtn').value;
 				const _keyword = document.getElementById('search').value;
-				myRequests("/traffic/orderList", {"vendor":_vendor, "keyword":_keyword}, "POST", getOrderList);
+				myRequests("/traffic/orderList", {"vendor":_vendor, "keyword":_keyword, "page": 1}, "POST", orderListCallback);
+			}
+
+			function getPage(page) {
+				setLoading(true, '\nloading...')
+				const _vendor = document.getElementById('vendorBtn').value;
+				const _keyword = document.getElementById('search').value;
+				myRequests("/traffic/orderList", {"vendor":_vendor, "keyword":_keyword, "page": page}, "POST", orderListCallback);
 			}
 
 			function setLoading(spin, msg) {

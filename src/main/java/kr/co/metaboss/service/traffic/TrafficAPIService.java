@@ -1,4 +1,4 @@
-package kr.co.metaboss.service;
+package kr.co.metaboss.service.traffic;
 
 import kr.co.metaboss.dto.traffic.Order;
 import kr.co.metaboss.repository.OrderRepository;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
-public class TrafficService extends VendorService {
+public class TrafficAPIService extends TrafficVendorService {
 
     private final OrderRepository orderRepository;
 
-    public TrafficService(VendorRepository vendorRepository, OrderRepository orderRepository) {
+    public TrafficAPIService(VendorRepository vendorRepository, OrderRepository orderRepository) {
         super(vendorRepository);
         this.orderRepository = orderRepository;
     }

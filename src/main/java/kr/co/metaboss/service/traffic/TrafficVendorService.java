@@ -1,4 +1,4 @@
-package kr.co.metaboss.service;
+package kr.co.metaboss.service.traffic;
 
 import kr.co.metaboss.repository.VendorRepository;
 import kr.co.metaboss.vo.VendorVO;
@@ -12,7 +12,7 @@ import java.util.List;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class VendorService {
+public class TrafficVendorService {
 
     private final VendorRepository vendorRepository;
 
