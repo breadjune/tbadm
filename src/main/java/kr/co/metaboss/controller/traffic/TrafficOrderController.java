@@ -5,6 +5,8 @@ import kr.co.metaboss.dto.traffic.Order;
 import kr.co.metaboss.service.traffic.TrafficAPIService;
 import kr.co.metaboss.service.traffic.TrafficOrderService;
 import kr.co.metaboss.service.traffic.TrafficVendorService;
+import kr.co.metaboss.vo.OrderVO;
+import kr.co.metaboss.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,13 @@ public class TrafficOrderController {
         mav.addObject("vendors", vendors);
         return mav;
     }
+
+//    @PostMapping("/order")
+//    @ResponseBody
+//    public List<ProductVO> order() {
+//        List<OrderVO> list = trafficOrderService.get();
+//        return mav;
+//    }
 
     @PostMapping("/addOrder")
     public String addOrder(Order order) {

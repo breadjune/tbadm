@@ -46,6 +46,7 @@
 											</ul>
 										</div>
 										<br>
+										<br>
 										<p>서비스</p>
 										<input id="service" type="hidden" name="service">
 										<div class="btn-group dropdown-group" style="padding: 0">
@@ -124,15 +125,16 @@
 	<script src="/vendor/toastr/toastr.min.js"></script>
 	<script src="/scripts/klorofil-common.js"></script>
 	<script src="/scripts/custom.js"></script>
+	<script src="/scripts/format.js"></script>
 	<script th:inline="javascript">
 		let PRODUCTS = new Object();
 		let EXCHANGE = 0;
 		exchange();
 
 		$( document ).ready(function() {
-			const vendor = document.getElementById("vendorBtn").value;
-			myRequests("/traffic/balance", {"vendor":vendor}, "POST", getBalance);
-			myRequests("/traffic/order", {"vendor":vendor}, "POST", getOrders);
+			const _vendor = document.getElementById("vendorBtn").value;
+			myRequests("/traffic/balance", {"vendor":_vendor}, "POST", getBalance);
+			myRequests("/traffic/getProduct", {"vendor":_vendor}, "POST", getProduct);
 
 			$('#order').keyup(function () {
 				this.value = this.value.replace(/(^0+)/,'');
@@ -184,24 +186,26 @@
 
 		function getVendors(element) {
 			const vendorBtn = document.getElementById('vendorBtn');
-			const _value = element.getAttribute('value');
-			vendorBtn.textContent = _value;
-			vendorBtn.value = _value;
-			document.getElementsByName('vendor')[0].value = _value;
+			const _vendor = element.getAttribute('value');
+			vendorBtn.textContent = _vendor;
+			vendorBtn.value = _vendor;
+			document.getElementsByName('vendor')[0].value = _vendor;
 			document.getElementById('balance').innerHTML = '<i class="fa fa-refresh fa-spin"></i>';
-			myRequests("/traffic/balance", {"vendor":_value}, "POST", getBalance);
-			myRequests("/traffic/order", {"vendor":_value}, "POST", getOrders);
+			myRequests("/traffic/balance", {"vendor":_vendor}, "POST", getBalance);
+			myRequests("/traffic/getProduct", {"vendor":_vendor}, "POST", getProduct);
 		}
 
 		/**
 		 * 남은금액 확인 콜백 함수
 		 */
-		function getOrders(data) {
+		function getProduct(data) {
+			document.getElementById('order').value = data[0]['minOrder'];
 			let _ul = document.getElementById('serviceUl');
 			while (_ul.hasChildNodes()) _ul.removeChild(_ul.firstChild);
 			for (let i=0, dl=data.length; i<dl; i++) {
 				const service = data[i]['service'];
-				const productName = data[i]['productName'];
+				const productName = koreaFormat(data[i]['productName']);
+				// const productName = data[i]['productName'];
 				const _li = document.createElement('li');
 				const _a = document.createElement('a');
 				_a.value = service;
@@ -221,11 +225,14 @@
 			const maxOrder = Number(PRODUCTS[service]['maxOrder']);
 			const refill = Number(PRODUCTS[service]['refill']);
 			const cancel = Number(PRODUCTS[service]['cancel']);
+
+
+			$('#serviceBtn').text(koreaFormat(PRODUCTS[service]['productName']));
 			$('#service').val(service);
-			$('#serviceBtn').text(PRODUCTS[service]['productName']);
 			$('#charge').text(PRODUCTS[service].rate+"($) | " + Math.ceil(exchange)+"(원)");
 			$('#minOrder').text(minOrder);
 			$('#maxOrder').text(maxOrder);
+			$('#order').val(minOrder);
 			if (refill === 0) $('#refill').text("없음");
 			else $('#refill').text("있음");
 			if (cancel === 0) $('#cancel').text("없음");
