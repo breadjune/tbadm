@@ -199,13 +199,15 @@
 		 * 남은금액 확인 콜백 함수
 		 */
 		function getProduct(data) {
-			document.getElementById('order').value = data[0]['minOrder'];
+			const minOrder = data[0]['minOrder'];
+			const rate = Number(data[0]['rate'])/1000;
+			document.getElementById('order').value = minOrder;
+			document.getElementById('amount').value = rate*Number(minOrder);
 			let _ul = document.getElementById('serviceUl');
 			while (_ul.hasChildNodes()) _ul.removeChild(_ul.firstChild);
 			for (let i=0, dl=data.length; i<dl; i++) {
 				const service = data[i]['service'];
 				const productName = koreaFormat(data[i]['productName']);
-				// const productName = data[i]['productName'];
 				const _li = document.createElement('li');
 				const _a = document.createElement('a');
 				_a.value = service;
@@ -296,29 +298,49 @@
 		 */
 		function submit() {
 			let form = $('#form').serializeObject();
-			console.log(form);
-			$.ajax({
-				url: "/traffic/addOrder",
-				data: form,
-				type: "POST"
-			}).done(function () {
-				alert('요청이 완료되었습니다.');
-				// toast('요청이 완료되었습니다.', 'success');
-			}).fail(function () {
-				toast('요청에 실패하였습니다.', 'error');
-			});
+			if (!validation(form)) return false;
+			else {
+				$.ajax({
+					url: "/traffic/addOrder",
+					data: form,
+					type: "POST"
+				}).done(function () {
+					alert('주문이 완료되었습니다.');
+				}).fail(function () {
+					alert('주문에 실패하였습니다.', 'error');
+				});
+			}
 		};
 
-
 		/**
-		 * 토스트 메시지
+		 * 유효성 검사
 		 */
-		function toast(msg, type) {
-			console.log('toast!!');
-			toastr.options.timeOut = "3000";
-			toastr.options.closeButton = false;
-			toastr[type](msg, '' , { positionClass: 'toast-bottom-right' });
+		function validation(form) {
+			let keys = Object.keys(form);
+			for (let i=0, l=keys.length; i<l; i++) {
+				let value = form[keys[i]];
+				if (value === null || value === undefined || value === '' || Number(value) === 0) {
+					switch (keys[i]) {
+						case 'link':
+							alert('URL을 입력해주세요.');
+							return false;
+						case 'runs':
+							alert('반복횟수를 입력해주세요.');
+							return false;
+						case 'interval':
+							alert('간격을 입력해주세요.');
+							return false;
+					}
+				}
+			}
+			return true;
 		}
+
+		// function toast(msg, type) {
+		// 	toastr.options.timeOut = "3000";
+		// 	toastr.options.closeButton = false;
+		// 	toastr[type](msg, '' , { positionClass: 'toast-bottom-right' });
+		// }
 	</script>
 </body>
 

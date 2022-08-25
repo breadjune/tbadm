@@ -1,8 +1,8 @@
 package kr.co.metaboss.service.traffic;
 
 import kr.co.metaboss.dto.traffic.Order;
-import kr.co.metaboss.repository.OrderRepository;
-import kr.co.metaboss.repository.VendorRepository;
+import kr.co.metaboss.repository.traffic.TrafficOrderRepository;
+import kr.co.metaboss.repository.traffic.TrafficVendorRepository;
 import kr.co.metaboss.utils.JSONUtils;
 import kr.co.metaboss.utils.Requests;
 import kr.co.metaboss.vo.VendorVO;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class TrafficAPIService extends TrafficVendorService {
 
-    private final OrderRepository orderRepository;
+    private final TrafficOrderRepository trafficOrderRepository;
 
-    public TrafficAPIService(VendorRepository vendorRepository, OrderRepository orderRepository) {
-        super(vendorRepository);
-        this.orderRepository = orderRepository;
+    public TrafficAPIService(TrafficVendorRepository trafficVendorRepository, TrafficOrderRepository trafficOrderRepository) {
+        super(trafficVendorRepository);
+        this.trafficOrderRepository = trafficOrderRepository;
     }
 
     public int addOrder(Order order) {
@@ -31,7 +31,7 @@ public class TrafficAPIService extends TrafficVendorService {
         order.setOrderId(String.valueOf(response.getInt("order")));
         //[TODO] 임시 주문 번호 생성 (개발 완료 후 삭제 필요!!)
 //        order.setOrderId("329888060");
-        return orderRepository.insertOrder(order);
+        return trafficOrderRepository.insertOrder(order);
     }
 
     public String getBalance(String vendor) {

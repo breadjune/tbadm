@@ -1,4 +1,4 @@
-package kr.co.metaboss.repository;
+package kr.co.metaboss.repository.traffic;
 
 import kr.co.metaboss.vo.VendorVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 @Mapper
-public interface VendorRepository {
+public interface TrafficVendorRepository {
     List<VendorVO> getVendorList();
     VendorVO getVendor(String vendor);
     String getKey(String vendor);

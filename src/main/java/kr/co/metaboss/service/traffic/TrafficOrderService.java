@@ -1,8 +1,8 @@
 package kr.co.metaboss.service.traffic;
 
 import kr.co.metaboss.dto.common.Search;
-import kr.co.metaboss.repository.OrderRepository;
-import kr.co.metaboss.repository.VendorRepository;
+import kr.co.metaboss.repository.traffic.TrafficOrderRepository;
+import kr.co.metaboss.repository.traffic.TrafficVendorRepository;
 import kr.co.metaboss.utils.Requests;
 import kr.co.metaboss.vo.OrderVO;
 import kr.co.metaboss.vo.VendorVO;
@@ -19,11 +19,11 @@ import java.util.Map;
 @Service
 public class TrafficOrderService extends TrafficVendorService {
 
-    private OrderRepository orderRepository;
+    private TrafficOrderRepository trafficOrderRepository;
 
-    public TrafficOrderService(VendorRepository vendorRepository, OrderRepository orderRepository) {
-        super(vendorRepository);
-        this.orderRepository = orderRepository;
+    public TrafficOrderService(TrafficVendorRepository trafficVendorRepository, TrafficOrderRepository trafficOrderRepository) {
+        super(trafficVendorRepository);
+        this.trafficOrderRepository = trafficOrderRepository;
     }
 
     public Map<String, Object> getOrderList(Search search) {
@@ -36,7 +36,7 @@ public class TrafficOrderService extends TrafficVendorService {
     }
 
     public List<OrderVO> getList(Search search) {
-        return orderRepository.getOrder(search);
+        return trafficOrderRepository.getOrder(search);
     }
 
     public String getStatus(String vendor, List<OrderVO> list) {
@@ -55,7 +55,7 @@ public class TrafficOrderService extends TrafficVendorService {
     public Map<String, Integer> getPageSize(Search search) {
         Map<String, Integer> map = new HashMap<>();
         map.put("currentPage", search.getPage());
-        map.put("pageSize", (Integer.parseInt(orderRepository.getOrderCount(search)) / search.getRecodeSize()) + 1);
+        map.put("pageSize", (Integer.parseInt(trafficOrderRepository.getOrderCount(search)) / search.getRecodeSize()) + 1);
         return map;
     }
 }

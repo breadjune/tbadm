@@ -64,19 +64,18 @@
 	<!-- END WRAPPER -->
 	<script>
 		const el = document.querySelector('#login-bg');
+
+		if (document.body.clientWidth > 1022) document.querySelector('.img_wrap').style.display = 'block';
+		else document.querySelector('.img_wrap').style.display = 'none';
+
 		window.addEventListener("resize", function(event) {
-			// console.log(document.body.clientWidth + ' wide by ' + document.body.clientHeight+' high');
 			if (document.body.clientWidth > 1022) document.querySelector('.img_wrap').style.display = 'block';
 			else document.querySelector('.img_wrap').style.display = 'none';
 		})
 
-
 		setInterval(function() {
 			window.requestAnimationFrame(fadeIn);
 		}, 10000);
-		// document.querySelector('#login-bg').addEventListener('click', function () {
-		// 	window.requestAnimationFrame(fadeIn);
-		// })
 
 		function fadeIn() {
 			var val = (+el.style.opacity == 0) ? 1 : +el.style.opacity;

@@ -1,4 +1,4 @@
-package kr.co.metaboss.repository;
+package kr.co.metaboss.repository.traffic;
 
 import kr.co.metaboss.vo.ProductVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Repository
 @Mapper
-public interface ProductRepository {
+public interface TrafficProductRepository {
     List<ProductVO> getProduct();
     List<ProductVO> getProductByVendor(String vendor);
     int getTotalCountByVendor(String vendor);

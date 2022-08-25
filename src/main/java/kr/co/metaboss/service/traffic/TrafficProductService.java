@@ -1,7 +1,7 @@
 package kr.co.metaboss.service.traffic;
 
-import kr.co.metaboss.repository.ProductRepository;
-import kr.co.metaboss.repository.VendorRepository;
+import kr.co.metaboss.repository.traffic.TrafficProductRepository;
+import kr.co.metaboss.repository.traffic.TrafficVendorRepository;
 import kr.co.metaboss.utils.JSONUtils;
 import kr.co.metaboss.utils.Requests;
 import kr.co.metaboss.vo.ProductVO;
@@ -20,15 +20,15 @@ import java.util.Map;
 @Service
 public class TrafficProductService {
 
-    private final ProductRepository productRepository;
-    private final VendorRepository vendorRepository;
+    private final TrafficProductRepository trafficProductRepository;
+    private final TrafficVendorRepository trafficVendorRepository;
 
     public List<ProductVO> getProductByVendor(String vendor) {
-        return productRepository.getProductByVendor(vendor);
+        return trafficProductRepository.getProductByVendor(vendor);
     }
 
     public int getTotalCountByVendor(String vendor) {
-        int totalCount = productRepository.getTotalCountByVendor(vendor);
+        int totalCount = trafficProductRepository.getTotalCountByVendor(vendor);
         log.info("totalCount :" + totalCount);
         int pageCount = (int) Math.floor(totalCount/20);
         log.info("pageCount :" + pageCount);
@@ -37,8 +37,8 @@ public class TrafficProductService {
 
     public void updateProduct(String vendor) {
         log.info("vendor : " + vendor);
-        VendorVO vendorVO = vendorRepository.getVendor(vendor);
-        List<String> productServiceList = productRepository.getProductServices(vendor);
+        VendorVO vendorVO = trafficVendorRepository.getVendor(vendor);
+        List<String> productServiceList = trafficProductRepository.getProductServices(vendor);
         JSONObject data = new JSONObject();
         data.put("key", vendorVO.getApiKey());
         data.put("action", "services");
@@ -46,8 +46,8 @@ public class TrafficProductService {
         List<Map<String, Object>> responseArray = JSONUtils.getListMapFromJsonArray(response);
         for (Map<String, Object> stringObjectMap : responseArray) {
             stringObjectMap.put("vendor", vendor);
-            if (productServiceList.contains(String.valueOf(stringObjectMap.get("service")))) productRepository.updateProduct(stringObjectMap);
-            else productRepository.insertProduct(stringObjectMap);
+            if (productServiceList.contains(String.valueOf(stringObjectMap.get("service")))) trafficProductRepository.updateProduct(stringObjectMap);
+            else trafficProductRepository.insertProduct(stringObjectMap);
         }
     }
 }
