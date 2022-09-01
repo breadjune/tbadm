@@ -22,16 +22,21 @@ public class TrafficAPIService extends TrafficVendorService {
     }
 
     public int addOrder(Order order) {
-        JSONObject json = JSONUtils.convertDtoToJsonObject(order);
-        VendorVO vendorVO = getVendor(order.getVendor());
-        json.remove("vendor");
-        json.put("key", vendorVO.getApiKey());
-        Requests requests = new Requests(vendorVO.getUrl(), json);
-        JSONObject response = requests.postAndObjectResponse();
-        order.setOrderId(String.valueOf(response.getInt("order")));
-        //[TODO] 임시 주문 번호 생성 (개발 완료 후 삭제 필요!!)
-//        order.setOrderId("329888060");
-        return trafficOrderRepository.insertOrder(order);
+        log.info("addOrder : " + order.toString());
+        if (order.getKeyword() != null) {
+            order.setLink(order.getLink()+":"+order.getKeyword());
+        }
+        log.info("replaceOrder : " + order.toString());
+        return 1;
+
+//        JSONObject json = JSONUtils.convertDtoToJsonObject(order);
+//        VendorVO vendorVO = getVendor(order.getVendor());
+//        json.remove("vendor");
+//        json.put("key", vendorVO.getApiKey());
+//        Requests requests = new Requests(vendorVO.getUrl(), json);
+//        JSONObject response = requests.postAndObjectResponse();
+//        order.setOrderId(String.valueOf(response.getInt("order")));
+//        return trafficOrderRepository.insertOrder(order);
     }
 
     public String getBalance(String vendor) {

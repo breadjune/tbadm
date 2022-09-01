@@ -234,9 +234,11 @@ jQuery.fn.serializeObject = function() {
 	try {
 		if(this[0].tagName && this[0].tagName.toUpperCase() == "FORM" ) {
 			var arr = this.serializeArray();
-			if(arr){ obj = {};
+			if(arr){
+				obj = new Object();
 				jQuery.each(arr, function() {
-					obj[this.name] = this.value; });
+					if (!this.disabled) obj[this.name] = this.value;
+				});
 			}
 		}
 	}catch(e) {

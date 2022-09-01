@@ -11,6 +11,7 @@ public class Order {
     String vendor;
     String action;
     String link;
+    String keyword;
     String orderId;
     String service;
     int quantity;

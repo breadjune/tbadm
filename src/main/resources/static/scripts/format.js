@@ -97,3 +97,8 @@ function koreaFormat(text) {
     else format += text;
     return format;
 }
+
+function isKeyword(text) {
+    if (text.includes('Keywords')) return true;
+    else return false;
+}

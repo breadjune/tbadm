@@ -72,6 +72,11 @@
 										<p>URL</p>
 										<input type="String" class="form-control" name="link" value="">
 										<br>
+										<div id="keywordDiv" style="display: none">
+											<p>키워드</p>
+											<input type="String" class="form-control" name="keyword" disabled>
+											<br>
+										</div>
 										<p>주문 개수</p>
 										<input id="order" name="quantity" class="form-control" type="number" value="0" onwheel="return false;">
 										<br>
@@ -228,6 +233,13 @@
 			const refill = Number(PRODUCTS[service]['refill']);
 			const cancel = Number(PRODUCTS[service]['cancel']);
 
+			if(isKeyword(PRODUCTS[service]['productName'])) {
+				document.getElementById('keywordDiv').style.display = 'block';
+				document.querySelector('#keywordDiv input').disabled = false;
+			} else {
+				document.getElementById('keywordDiv').style.display = 'none';
+				document.querySelector('#keywordDiv input').disabled = true;
+			}
 
 			$('#serviceBtn').text(koreaFormat(PRODUCTS[service]['productName']));
 			$('#service').val(service);
@@ -298,6 +310,7 @@
 		 */
 		function submit() {
 			let form = $('#form').serializeObject();
+			console.log(form);
 			if (!validation(form)) return false;
 			else {
 				$.ajax({
