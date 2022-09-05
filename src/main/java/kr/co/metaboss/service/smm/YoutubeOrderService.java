@@ -1,8 +1,9 @@
-package kr.co.metaboss.service.traffic;
+package kr.co.metaboss.service.smm;
 
 import kr.co.metaboss.dto.common.Search;
-import kr.co.metaboss.repository.traffic.TrafficOrderRepository;
-import kr.co.metaboss.repository.traffic.TrafficVendorRepository;
+import kr.co.metaboss.repository.smm.SmmVendorRepository;
+import kr.co.metaboss.repository.smm.TrafficOrderRepository;
+import kr.co.metaboss.repository.smm.YoutubeOrderRepository;
 import kr.co.metaboss.utils.Requests;
 import kr.co.metaboss.vo.OrderVO;
 import kr.co.metaboss.vo.VendorVO;
@@ -17,13 +18,13 @@ import java.util.Map;
 
 @Log4j2
 @Service
-public class TrafficOrderService extends TrafficVendorService {
+public class YoutubeOrderService extends SmmVendorService {
 
-    private TrafficOrderRepository trafficOrderRepository;
+    private YoutubeOrderRepository youtubeOrderRepository;
 
-    public TrafficOrderService(TrafficVendorRepository trafficVendorRepository, TrafficOrderRepository trafficOrderRepository) {
-        super(trafficVendorRepository);
-        this.trafficOrderRepository = trafficOrderRepository;
+    public YoutubeOrderService(SmmVendorRepository smmVendorRepository, YoutubeOrderRepository youtubeOrderRepository) {
+        super(smmVendorRepository);
+        this.youtubeOrderRepository = youtubeOrderRepository;
     }
 
     public Map<String, Object> getOrderList(Search search) {
@@ -36,7 +37,7 @@ public class TrafficOrderService extends TrafficVendorService {
     }
 
     public List<OrderVO> getList(Search search) {
-        return trafficOrderRepository.getOrder(search);
+        return youtubeOrderRepository.getOrder(search);
     }
 
     public String getStatus(String vendor, List<OrderVO> list) {
@@ -55,7 +56,7 @@ public class TrafficOrderService extends TrafficVendorService {
     public Map<String, Integer> getPageSize(Search search) {
         Map<String, Integer> map = new HashMap<>();
         map.put("currentPage", search.getPage());
-        map.put("pageSize", (Integer.parseInt(trafficOrderRepository.getOrderCount(search)) / search.getRecodeSize()) + 1);
+        map.put("pageSize", (Integer.parseInt(youtubeOrderRepository.getOrderCount(search)) / search.getRecodeSize()) + 1);
         return map;
     }
 }

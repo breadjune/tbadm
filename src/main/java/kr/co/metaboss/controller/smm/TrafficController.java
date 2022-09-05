@@ -1,11 +1,11 @@
-package kr.co.metaboss.controller.traffic;
+package kr.co.metaboss.controller.smm;
 
 import kr.co.metaboss.dto.common.Search;
 import kr.co.metaboss.dto.traffic.Order;
-import kr.co.metaboss.service.traffic.TrafficOrderService;
-import kr.co.metaboss.service.traffic.TrafficProductService;
-import kr.co.metaboss.service.traffic.TrafficAPIService;
-import kr.co.metaboss.service.traffic.TrafficVendorService;
+import kr.co.metaboss.service.smm.TrafficOrderService;
+import kr.co.metaboss.service.smm.SmmProductService;
+import kr.co.metaboss.service.smm.SmmAPIService;
+import kr.co.metaboss.service.smm.SmmVendorService;
 import kr.co.metaboss.vo.ProductVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,23 +22,23 @@ import java.util.Map;
 @Log4j2
 public class TrafficController {
 
-    private final TrafficProductService trafficProductService;
-    private final TrafficVendorService trafficVendorService;
+    private final SmmProductService smmProductService;
+    private final SmmVendorService smmVendorService;
     private final TrafficOrderService trafficOrderService;
-    private final TrafficAPIService trafficAPIService;
+    private final SmmAPIService trafficAPIService;
 
     @GetMapping("/products")
     public ModelAndView getProducts(@RequestParam(defaultValue = "KINGS") String vendor) {
         ModelAndView mav = new ModelAndView("products");
-        mav.addObject("list", trafficProductService.getProductByVendor(vendor));
-        mav.addObject("count", trafficProductService.getTotalCountByVendor(vendor));
+        mav.addObject("list", smmProductService.getTrafficProducts(vendor));
+        mav.addObject("count", smmProductService.getTrafficProductsSize(vendor));
         return mav;
     }
 
     @PostMapping("/products")
     @ResponseBody
     public ModelAndView postProducts(@RequestParam String vendor) {
-        List<ProductVO> list = trafficProductService.getProductByVendor(vendor);
+        List<ProductVO> list = smmProductService.getTrafficProducts(vendor);
         ModelAndView mav = new ModelAndView("products :: #tables");
         mav.addObject("list", list);
         return mav;
@@ -48,25 +48,19 @@ public class TrafficController {
     @ResponseBody
     public List<ProductVO> getProduct(@RequestParam String vendor,
                                       @RequestParam(defaultValue = "0") String index) {
-        return trafficProductService.getProductByVendor(vendor);
+        return smmProductService.getTrafficProducts(vendor);
     }
 
     @GetMapping("/updateProduct")
     @ResponseBody
     public void updateProduct(String vendor) {
-        trafficProductService.updateProduct(vendor);
-    }
-
-    @PostMapping("/balance")
-    @ResponseBody
-    public String getBalance(@RequestParam(defaultValue = "KINGS") String vendor) {
-        return trafficAPIService.getBalance(vendor);
+        smmProductService.updateProduct(vendor);
     }
 
     @GetMapping("/order")
     public ModelAndView order() {
         ModelAndView mav = new ModelAndView("order");
-        List<String> vendors = trafficVendorService.getVendorByName();
+        List<String> vendors = smmVendorService.getVendorByName();
         mav.addObject("vendors", vendors);
         return mav;
     }
@@ -80,7 +74,7 @@ public class TrafficController {
     @GetMapping("/orderList")
     public ModelAndView orderList() {
         ModelAndView mav = new ModelAndView("orderList");
-        List<String> vendors = trafficVendorService.getVendorByName();
+        List<String> vendors = smmVendorService.getVendorByName();
         mav.addObject("vendors", vendors);
         return mav;
     }

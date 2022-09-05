@@ -1,4 +1,4 @@
-package kr.co.metaboss.repository.traffic;
+package kr.co.metaboss.repository.smm;
 
 import kr.co.metaboss.dto.common.Search;
 import kr.co.metaboss.dto.traffic.Order;

@@ -1,9 +1,8 @@
-package kr.co.metaboss.service.traffic;
+package kr.co.metaboss.service.smm;
 
 import kr.co.metaboss.dto.traffic.Order;
-import kr.co.metaboss.repository.traffic.TrafficOrderRepository;
-import kr.co.metaboss.repository.traffic.TrafficVendorRepository;
-import kr.co.metaboss.utils.JSONUtils;
+import kr.co.metaboss.repository.smm.TrafficOrderRepository;
+import kr.co.metaboss.repository.smm.SmmVendorRepository;
 import kr.co.metaboss.utils.Requests;
 import kr.co.metaboss.vo.VendorVO;
 import lombok.extern.log4j.Log4j2;
@@ -12,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
-public class TrafficAPIService extends TrafficVendorService {
+public class SmmAPIService extends SmmVendorService {
 
     private final TrafficOrderRepository trafficOrderRepository;
 
-    public TrafficAPIService(TrafficVendorRepository trafficVendorRepository, TrafficOrderRepository trafficOrderRepository) {
-        super(trafficVendorRepository);
+    public SmmAPIService(SmmVendorRepository smmVendorRepository, TrafficOrderRepository trafficOrderRepository) {
+        super(smmVendorRepository);
         this.trafficOrderRepository = trafficOrderRepository;
     }
 

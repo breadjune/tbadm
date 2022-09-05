@@ -21,13 +21,14 @@ public class Requests {
 
     public JSONArray postAndArrayResponse() {
         String response = this.post();
+        log.info("postAndArrayResponse : " + response);
         if (!response.isEmpty()) return new JSONArray(response);
         else return null;
     }
 
     public JSONObject postAndObjectResponse() {
         String response = this.post();
-        log.info("response : " + response);
+        log.info("postAndObjectResponse : " + response);
         if (!response.isEmpty()) {
             return new JSONObject(response);
         } else return null;
