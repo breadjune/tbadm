@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="common/header" />
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<div th:replace="common/navbar" />
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<div th:replace="common/sidebar" />
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="main-content">
+				<div class="container-fluid">
+					<h3 class="page-title">트래픽 관리</h3>
+					<div class="row">
+						<div class="col-md-12 table-row-init">
+							<!-- TABLE STRIPED -->
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">상품 목록</h3>
+									<br>
+									<select id="vendorSelect" class="form-control" onchange="selectVendor(this)">
+										<option value="KINGS">KINGS</option>
+										<option value="JAP">JAP</option>
+									</select>
+								</div>
+								<div id="tables" class="panel-body">
+									<div class="input-group md-3 search-float-right">
+										<input class="form-control" type="text">
+										<span class="input-group-btn"><button class="btn btn-primary" type="button">검색</button></span>
+									</div>
+									<br>
+									<br>
+									<br>
+									<table class="table table-striped product-table-header">
+										<thead>
+											<tr>
+												<th>공급업체</th>
+												<th>서비스번호</th>
+												<th>상품</th>
+												<th>카테고리</th>
+												<th>비용(1000개)</th>
+												<th>최소주문</th>
+												<th>최대주문</th>
+												<th>리필</th>
+												<th>취소</th>
+											</tr>
+										</thead>
+										<tbody class="table-break-all">
+											<tr th:each="product : ${list}">
+												<td th:text="${product.vendor}"></td>
+												<td th:text="${product.service}"></td>
+												<td th:text="${product.productName}"></td>
+												<td th:text="${product.category}"></td>
+												<td th:text="${product.rate}+'$'"></td>
+												<td th:text="${product.minOrder}"></td>
+												<td th:text="${product.maxOrder}"></td>
+												<th:block th:switch="${product.refill}">
+													<td class="cancel" th:case="0">불가</td>
+													<td class="cancel" th:case="1">가능</td>
+												</th:block>
+												<th:block th:switch="${product.cancel}">
+													<td class="cancel" th:case="0">불가</td>
+													<td class="cancel" th:case="1">가능</td>
+												</th:block>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- END TABLE STRIPED -->
+<!--							<div class="text-center">-->
+<!--								<nav aria-label="Page navigation example">-->
+<!--									<ul class="pagination">-->
+<!--										<li class="page-item disabled">-->
+<!--											<a class="page-link" href="#" aria-label="Previous">-->
+<!--												<span aria-hidden="true">&laquo;</span>-->
+<!--											</a>-->
+<!--										</li>-->
+<!--										<li class="page-item" th:each="num:${#numbers.sequence(1, count)}"><a class="page-link" href="#" onclick="paging(this)" th:text="${numStat.count}"></a></li>-->
+<!--										<li class="page-item">-->
+<!--											<a class="page-link" href="#" aria-label="Next">-->
+<!--												<span aria-hidden="true">&raquo;</span>-->
+<!--											</a>-->
+<!--										</li>-->
+<!--									</ul>-->
+<!--								</nav>-->
+<!--							</div>-->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+		<footer>
+			<div class="container-fluid">
+				<p class="copyright">Shared by <i class="fa fa-love"></i><a href="https://bootstrapthemes.co">BootstrapThemes</a>
+</p>
+			</div>
+		</footer>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<script src="/vendor/jquery/jquery.min.js"></script>
+	<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="/scripts/klorofil-common.js"></script>
+	<script src="/scripts/custom.js"></script>
+	<script th:inline="javascript">
+		function selectVendor(element) {
+			const vendor = element.value;
+			$.ajax({
+				url: "/smm/traffic/products",
+				data: {"vendor":vendor},
+				type: "POST"
+			}).done(function (data) {
+				console.log(data);
+				$("#tables").replaceWith(data);
+			});
+		}
+
+		function paging(element) {
+			const vendor = $('#vendorSelect').val();
+			const page = String(Number(element.text)*20);
+			console.log("page : " + page);
+			$.ajax({
+				url: "/smm/traffic/products",
+				data: {"vendor":vendor},
+				type: "POST"
+			}).done(function (data) {
+				console.log(data);
+				$("#tables").replaceWith(data);
+			});
+		}
+
+	</script>
+</body>
+
+</html>
