@@ -4,10 +4,11 @@ spring:
       static-locations: classpath:/static/
 
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://metaboss.co.kr:3306/metaboss?characterEncoding=utf8
     username: metaboss
     password: qndhkauddPfmf1!
-    driver-class-name: com.mysql.cj.jdbc.Driver
+
 
 mybatis:
   type-aliases-package: com.example.myproject.mapper
