@@ -79,15 +79,16 @@ public class SMMService {
      */
     public int addOrder(Order order) {
         if (order.getKeyword() != null) order.setLink(order.getLink()+":"+order.getKeyword());
-//        JSONObject json = JSONUtils.convertDtoToJsonObject(order);
-//        VendorVO vendorVO = getVendor(order.getVendor());
-//        json.remove("vendor");
-//        json.put("key", vendorVO.getApiKey());
-//        Requests requests = new Requests(vendorVO.getUrl(), json);
-//        JSONObject response = requests.postAndObjectResponse();
-//        order.setOrderId(String.valueOf(response.getInt("order")));
-//        return trafficOrderRepository.insertOrder(order);
-        return 1;
+        JSONObject json = JSONUtils.convertDtoToJsonObject(order);
+        VendorVO vendorVO = getVendors(order.getVendor());
+        json.remove("vendor");
+        json.put("key", vendorVO.getApiKey());
+        Requests requests = new Requests(vendorVO.getUrl(), json);
+        JSONObject response = requests.postAndObjectResponse();
+        order.setOrderId(String.valueOf(response.getInt("order")));
+        order.setOrderId("test");
+        return smmRepository.insertOrder(order);
+//        return 1;
     }
 
     public Map<String, Object> getOrderList(Search search) {

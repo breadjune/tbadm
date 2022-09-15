@@ -203,7 +203,7 @@
 			localStorage.setItem('sv', _vendor)
 			if (!spFlag) localStorage.setItem('sp', '0');
 			myRequests("/smm/balance", {"vendor":_vendor}, "POST", getBalance);
-			myRequests("/smm/traffic/getProduct", {"vendor":_vendor}, "POST", getProduct);
+			myRequests("/smm/traffic/getProducts", {"vendor":_vendor}, "POST", getProduct);
 		}
 
 		/**
@@ -222,7 +222,7 @@
 			while (_ul.hasChildNodes()) _ul.removeChild(_ul.firstChild);
 			for (let i=0, dl=data.length; i<dl; i++) {
 				const service = data[i]['service'];
-				const productName = koreaFormat(data[i]['productName']);
+				const productName = data[i]['productName'];
 				const _li = document.createElement('li');
 				const _a = document.createElement('a');
 				_a.value = service;
@@ -252,7 +252,7 @@
 				document.querySelector('#keywordDiv input').disabled = true;
 			}
 
-			$('#serviceBtn').text(koreaFormat(PRODUCTS[service]['productName']));
+			$('#serviceBtn').text(PRODUCTS[service]['productName']);
 			$('#service').val(service);
 			$('#charge').text(PRODUCTS[service].rate+"($) | " + Math.ceil(exchange)+"(원)");
 			$('#minOrder').text(minOrder);
@@ -324,15 +324,21 @@
 			console.log(form);
 			if (!validation(form)) return false;
 			else {
-				$.ajax({
-					url: "/traffic/order",
-					data: form,
-					type: "POST"
-				}).done(function () {
-					alert('주문이 완료되었습니다.');
-				}).fail(function () {
-					alert('주문에 실패하였습니다.', 'error');
-				});
+				let balance = document.getElementById('balance').textContent;
+				let amount = document.getElementById('amount').value;
+				if(Number(balance) > Number(amount)) {
+					$.ajax({
+						url: "/smm/traffic/order",
+						data: form,
+						type: "POST"
+					}).done(function () {
+						alert('주문이 완료되었습니다.');
+					}).fail(function () {
+						alert('주문에 실패하였습니다.', 'error');
+					});
+				} else {
+					alert('잔고가 부족합니다.');
+				}
 			}
 		};
 

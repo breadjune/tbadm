@@ -65,9 +65,10 @@ public class SMMController {
     }
 
     @PostMapping("/traffic/order")
-    public String addOrder(Order order) {
+    @ResponseBody
+    public void addOrder(Order order) {
         smmService.addOrder(order);
-        return "redirect:/traffic/order";
+//        return "redirect:/traffic/order";
     }
 
     @GetMapping("/traffic/list")

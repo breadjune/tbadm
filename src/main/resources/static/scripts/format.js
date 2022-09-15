@@ -99,6 +99,6 @@ function koreaFormat(text) {
 }
 
 function isKeyword(text) {
-    if (text.includes('Keywords')) return true;
+    if (text.includes('키워드')) return true;
     else return false;
 }

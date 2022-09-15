@@ -134,6 +134,7 @@
         ,   orderAction
         ,   service
         ,   link
+        ,   keyword
         ,   quantity
         ,   runs
         ,   orderInterval
@@ -145,6 +146,7 @@
         ,   #{action}
         ,   #{service}
         ,   #{link}
+        ,   #{keyword}
         ,   #{quantity}
         ,   #{runs}
         ,   #{interval}
